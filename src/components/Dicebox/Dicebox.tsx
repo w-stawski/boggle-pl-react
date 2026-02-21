@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Dice from "../Dice/Dice";
 import "./Dicebox.css";
+import type { Letter } from "../../assets/types";
 
-export default function Dicebox({ letters }: { letters: string[] }) {
-  const [selectedLetters, selectLetter] = useState<string[]>([]);
+export default function Dicebox({ letters }: { letters: Letter[] }) {
+  const [selectedLettersIds, setSelectedLettersId] = useState<string[]>([]);
 
   const handleLetterSelect = (selectedLetter: string): void => {
-    selectLetter((letterArr) => [...letterArr, selectedLetter]);
+    setSelectedLettersId((letterArr) => [...letterArr, selectedLetter]);
   };
 
   return (
@@ -15,9 +16,9 @@ export default function Dicebox({ letters }: { letters: string[] }) {
         {letters.map((letter, index) => (
           <Dice
             key={index}
-            onLetterSelect={() => handleLetterSelect(letter)}
-            isSelected={selectedLetters.includes(letter)}
-            value={letter}
+            onLetterSelect={() => handleLetterSelect(letter.id)}
+            isSelected={selectedLettersIds.includes(letter.id)}
+            value={letter.val}
           />
         ))}
       </div>
