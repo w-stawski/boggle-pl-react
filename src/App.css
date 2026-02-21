@@ -1,11 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
 :root {
-  --color-bg: white;
+  --color-main-bg: white;
   --color-button: #6246ea;
   --color-border: #e45858;
   --color-shadow: #abd1c6;
-
+  --color-dice-bg: #c8d4e8;
   --font-main: "Bebas Neue", sans-serif;
 }
 * {
@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background-color: var(--color-bg);
+  background-color: var(--color-main-bg);
   justify-content: center;
   align-items: center;
 
