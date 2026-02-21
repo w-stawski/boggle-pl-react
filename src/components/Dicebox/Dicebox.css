@@ -1,0 +1,7 @@
+.dicebox-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 75%;
+  height: 75dvh;
+  background-color: white;
+}
