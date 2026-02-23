@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import "tailwindcss";
+
+:root {
+  --color-main-bg: white;
+  --color-button: #6246ea;
+  --color-border: #e45858;
+  --color-shadow: #abd1c6;
+  --color-dice-bg: #c8d4e8;
+  --color-dice-alert: red;
+  --font-main: "Bebas Neue", sans-serif;
+}

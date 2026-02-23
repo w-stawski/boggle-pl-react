@@ -2,6 +2,15 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 75%;
+  min-width: fit-content;
   aspect-ratio: 1 / 1;
   background-color: white;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.selected-letter-container {
+  background-color: var(--color-dice-bg);
 }

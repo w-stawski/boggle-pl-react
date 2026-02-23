@@ -130,3 +130,6 @@ export const diceLetters: Letter[][] = [
     { val: "W", id: "d15-s5" },
   ],
 ];
+
+export const getDicesPlaceholders = (): Letter[] =>
+  Array(16).fill({ val: "X", id: null });

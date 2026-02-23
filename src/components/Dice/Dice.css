@@ -6,7 +6,6 @@
   background-color: var(--color-dice-bg);
   border: 2px dashed var(--color-border);
   font-size: 50px;
-  font-family: var(--font-main);
   transition: 300ms;
 
   &.selected {
