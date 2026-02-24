@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
-import { diceLetters, getDicesPlaceholders } from "./utils/letters.js";
+import { diceLetters, getDicePlaceholders } from "./utils/letters.js";
 import type { Letter } from "./utils/types.js";
 import Dicebox from "./components/Dicebox/Dicebox.js";
 import "./App.css";
 
-const lettersPlaceHolder = getDicesPlaceholders();
+const lettersPlaceHolder = getDicePlaceholders();
 
 function App() {
   const [round, setRound] = useState(0);
-  const [dicesValues, setDicesValues] = useState<Letter[]>(lettersPlaceHolder);
+  const [DiceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<string[]>([]);
   const [seconds, setSeconds] = useState<number>(0);
@@ -64,7 +64,7 @@ function App() {
   };
 
   const onDiceRoll = (repeat: number) => {
-    setDicesValues(getDiceLetters());
+    setDiceValues(getDiceRandomValues());
     handleSelectedLettersUpdate(null);
 
     if (repeat) {
@@ -76,22 +76,22 @@ function App() {
     setIsTimerRunning(true);
   };
 
-  const getDiceLetters = () => {
-    const randomOrderDicesArr = diceLetters.sort(() => Math.random() - 0.5);
-    const randomDicesValues = randomOrderDicesArr.map((item) => {
+  const getDiceRandomValues = () => {
+    const randomOrderDiceArr = diceLetters.sort(() => Math.random() - 0.5);
+    const randomDiceValues = randomOrderDiceArr.map((item) => {
       const randomIndex = Math.floor(Math.random() * 6);
 
       return item[randomIndex];
     });
 
-    return randomDicesValues;
+    return randomDiceValues;
   };
 
   const setupNextRound = () => {
     setIsTimerRunning(null);
     setSelectedLetters([]);
     setWords([]);
-    setDicesValues(lettersPlaceHolder);
+    setDiceValues(lettersPlaceHolder);
     setRound((count) => ++count);
   };
 
@@ -102,6 +102,8 @@ function App() {
 
   return (
     <div className="main-container">
+      // TODO: use portal, change to modal, check if store values true / false /
+      null is good idea
       {isTimerRunning === false && (
         <div
           onClick={() => setupNextRound()}
@@ -123,12 +125,11 @@ function App() {
           </p>
         )}
       </div>
-
       <button className="rounded-sm p-4 mb-3" onClick={() => onDiceRoll(15)}>
         roll the dice
       </button>
       {isTimerRunning && (
-        <div className="selected-letter-container px-4 py-2 my-4 rounded-sm min-w-[150px]">
+        <div className="selected-letter-container px-4 py-2 my-4 rounded-sm min-w-37.5">
           {selectedLetters.length ? (
             <div className="flex justify-between">
               <h1>{word}</h1>
@@ -146,7 +147,7 @@ function App() {
         </div>
       )}
       <Dicebox
-        letters={dicesValues}
+        letters={DiceValues}
         onLetterSelect={handleSelectedLettersUpdate}
         selectedLettersIds={selectedLetters.map((letter) => letter.id)}
       />

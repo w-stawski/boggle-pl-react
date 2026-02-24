@@ -131,5 +131,5 @@ export const diceLetters: Letter[][] = [
   ],
 ];
 
-export const getDicesPlaceholders = (): Letter[] =>
+export const getDicePlaceholders = (): Letter[] =>
   Array(16).fill({ val: "X", id: null });
