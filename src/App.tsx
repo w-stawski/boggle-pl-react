@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { diceLetters, getDicePlaceholders } from "./utils/letters.js";
+import { getDicePlaceholders, getDiceRandomValues } from "./utils/letters.js";
 import type { Letter } from "./utils/types.js";
 import Dicebox from "./components/Dicebox/Dicebox.js";
 import "./App.css";
@@ -9,7 +9,7 @@ const lettersPlaceHolder = getDicePlaceholders();
 
 function App() {
   const [round, setRound] = useState(0);
-  const [DiceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
+  const [diceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<string[]>([]);
   const [seconds, setSeconds] = useState<number>(0);
@@ -38,9 +38,38 @@ function App() {
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join(" ");
 
+  const checkIfLetterValid = (letter: Letter): boolean => {
+    if (!selectedLetters.length) {
+      return true;
+    }
+    const currentlySelectedIndex = letter.index as number;
+    const isTouchingSelected = !!selectedLetters.find(
+      (selectedLetter: Letter) => {
+        const previouslySelectedIndex = selectedLetter.index as number;
+
+        return (
+          previouslySelectedIndex + 1 === currentlySelectedIndex ||
+          previouslySelectedIndex - 1 === currentlySelectedIndex ||
+          previouslySelectedIndex + 4 === currentlySelectedIndex ||
+          previouslySelectedIndex - 4 === currentlySelectedIndex ||
+          previouslySelectedIndex + 5 === currentlySelectedIndex ||
+          previouslySelectedIndex - 5 === currentlySelectedIndex ||
+          previouslySelectedIndex + 3 === currentlySelectedIndex ||
+          previouslySelectedIndex - 3 === currentlySelectedIndex
+        );
+      },
+    );
+
+    return isTouchingSelected;
+  };
+
   const handleSelectedLettersUpdate = (selectedLetter: Letter | null): void => {
     if (!selectedLetter) {
       setSelectedLetters([]);
+      return;
+    }
+
+    if (!checkIfLetterValid(selectedLetter)) {
       return;
     }
 
@@ -65,26 +94,15 @@ function App() {
 
   const onDiceRoll = (repeat: number) => {
     setDiceValues(getDiceRandomValues());
-    handleSelectedLettersUpdate(null);
 
     if (repeat) {
       setTimeout(() => onDiceRoll(--repeat), 50);
       return;
     }
 
-    setSeconds(150);
+    handleSelectedLettersUpdate(null);
+    setSeconds(15000);
     setIsTimerRunning(true);
-  };
-
-  const getDiceRandomValues = () => {
-    const randomOrderDiceArr = diceLetters.sort(() => Math.random() - 0.5);
-    const randomDiceValues = randomOrderDiceArr.map((item) => {
-      const randomIndex = Math.floor(Math.random() * 6);
-
-      return item[randomIndex];
-    });
-
-    return randomDiceValues;
   };
 
   const setupNextRound = () => {
@@ -102,8 +120,8 @@ function App() {
 
   return (
     <div className="main-container">
-      // TODO: use portal, change to modal, check if store values true / false /
-      null is good idea
+      {/*  TODO: use portal, change to modal, check if store values true / false /
+      null is good idea make modal reusable */}
       {isTimerRunning === false && (
         <div
           onClick={() => setupNextRound()}
@@ -147,7 +165,7 @@ function App() {
         </div>
       )}
       <Dicebox
-        letters={DiceValues}
+        letters={diceValues}
         onLetterSelect={handleSelectedLettersUpdate}
         selectedLettersIds={selectedLetters.map((letter) => letter.id)}
       />

@@ -131,5 +131,37 @@ export const diceLetters: Letter[][] = [
   ],
 ];
 
+const diceWordIndexPattern = [0, 1, 5, 6, 10, 14, 15];
+
+export const getDiceRandomValues = (): Letter[] => {
+  const randomOrderDiceArr = diceLetters.sort(() => Math.random() - 0.5);
+  const randomDiceValues = randomOrderDiceArr.map((item: Letter[], index) => {
+    const randomIndex = Math.floor(Math.random() * 6);
+
+    return { ...item[randomIndex], index };
+  });
+
+  return randomDiceValues;
+};
+
+export const getDiceValuesWithSetWord = (
+  diceValues: Letter[],
+  word: string,
+) => {
+  if (!word || word.length > 7) {
+    return diceValues;
+  }
+
+  const wordLetters = [...word];
+  const updatedDiceValues = [...diceValues];
+
+  wordLetters.forEach((letter: string, index) => {
+    const updateDiceIndex = diceWordIndexPattern[index];
+    updatedDiceValues[updateDiceIndex].val = letter;
+  });
+
+  return updatedDiceValues;
+};
+
 export const getDicePlaceholders = (): Letter[] =>
   Array(16).fill({ val: "X", id: null });

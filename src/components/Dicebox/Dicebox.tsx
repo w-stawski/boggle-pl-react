@@ -19,9 +19,10 @@ export default function Dicebox({
       {letters.map((letter, index) => (
         <Dice
           isSelected={checkIfSelected(letter.id)}
-          key={index}
+          key={letter.id ?? index}
           onLetterSelect={() => onLetterSelect(letter)}
-          value={letter.val}
+          // todo: change back to value
+          value={letter.index}
         />
       ))}
     </div>

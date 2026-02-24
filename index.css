@@ -6,7 +6,11 @@
   --color-button: #6246ea;
   --color-border: #e45858;
   --color-shadow: #abd1c6;
-  --color-dice-bg: #c8d4e8;
+  --color-dice-bg: #e7e7e7;
   --color-dice-alert: red;
+  --border-radius-dice: 10%;
+  --box-shadow-dice:
+    inset 0 5px white, inset 0 -5px #bbb, inset 5px 0 #d7d7d7,
+    inset -5px 0 #d7d7d7;
   --font-main: "Bebas Neue", sans-serif;
 }

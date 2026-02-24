@@ -12,8 +12,9 @@
   font-size: 1.5rem;
 
   button {
-    background-color: var(--color-button);
-    box-shadow: 13px 15px 12px 1px var(--color-shadow);
+    color: var(--color-button);
+    background-color: var(--color-dice-bg);
+    box-shadow: var(--box-shadow-dice);
     transition: 1s;
 
     &:hover {
