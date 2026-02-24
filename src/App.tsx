@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { getDicePlaceholders, getDiceRandomValues } from "./utils/letters.js";
+import {
+  checkIfLetterValid,
+  getDicePlaceholders,
+  getDiceRandomValues,
+} from "./utils/letters.js";
 import type { Letter } from "./utils/types.js";
 import Dicebox from "./components/Dicebox/Dicebox.js";
 import "./App.css";
+import { useTimer } from "./hooks/useTimer.js";
 
 const lettersPlaceHolder = getDicePlaceholders();
 
@@ -12,56 +17,15 @@ function App() {
   const [diceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<string[]>([]);
-  const [seconds, setSeconds] = useState<number>(0);
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
+  const [showModal, setShowModal] = useState<boolean | null>(null);
 
-    if (isTimerRunning) {
-      interval = setInterval(() => {
-        setSeconds((secondsLeft) => {
-          if (!secondsLeft) {
-            setSelectedLetters([]);
-            setIsTimerRunning(false);
-
-            return 0;
-          }
-
-          return secondsLeft - 1;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isTimerRunning]);
+  const { seconds, startTimer } = useTimer(10, () => {
+    setSelectedLetters([]);
+    setShowModal(true);
+  });
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join(" ");
-
-  const checkIfLetterValid = (letter: Letter): boolean => {
-    if (!selectedLetters.length) {
-      return true;
-    }
-    const currentlySelectedIndex = letter.index;
-    const isTouchingSelected = !!selectedLetters.find(
-      (selectedLetter: Letter) => {
-        const previouslySelectedIndex = selectedLetter.index;
-
-        return (
-          previouslySelectedIndex + 1 === currentlySelectedIndex ||
-          previouslySelectedIndex - 1 === currentlySelectedIndex ||
-          previouslySelectedIndex + 4 === currentlySelectedIndex ||
-          previouslySelectedIndex - 4 === currentlySelectedIndex ||
-          previouslySelectedIndex + 5 === currentlySelectedIndex ||
-          previouslySelectedIndex - 5 === currentlySelectedIndex ||
-          previouslySelectedIndex + 3 === currentlySelectedIndex ||
-          previouslySelectedIndex - 3 === currentlySelectedIndex
-        );
-      },
-    );
-
-    return isTouchingSelected;
-  };
 
   const handleSelectedLettersUpdate = (selectedLetter: Letter | null): void => {
     if (!selectedLetter) {
@@ -69,7 +33,7 @@ function App() {
       return;
     }
 
-    if (!checkIfLetterValid(selectedLetter)) {
+    if (!checkIfLetterValid(selectedLetter, selectedLetters)) {
       return;
     }
 
@@ -101,15 +65,13 @@ function App() {
     }
 
     handleSelectedLettersUpdate(null);
-    setSeconds(15000);
-    setIsTimerRunning(true);
+    startTimer();
   };
 
   const setupNextRound = () => {
-    setIsTimerRunning(null);
+    setShowModal(false);
     setSelectedLetters([]);
     setWords([]);
-    setDiceValues(lettersPlaceHolder);
     setRound((count) => ++count);
   };
 
@@ -120,17 +82,16 @@ function App() {
 
   return (
     <div className="main-container">
-      {/*  TODO: use portal, change to modal, check if store values true / false /
-      null is good idea make modal reusable */}
-      {isTimerRunning === false && (
+      {/*  TODO: use portal, change to modal, user set round limit time limit, make modal reusable */}
+      {showModal && (
         <div
           onClick={() => setupNextRound()}
           className="absolute w-screen h-screen bg-gray-600 p-10"
         >
           <h1>TIME IS UP!</h1>
           <ul className="mt-5">
-            {words.map((word, index) => (
-              <li key={index}>{word}</li>
+            {words.map((word) => (
+              <li key={word}>{word}</li>
             ))}
           </ul>
         </div>
@@ -146,7 +107,7 @@ function App() {
       <button className="rounded-sm p-4 mb-3" onClick={() => onDiceRoll(15)}>
         roll the dice
       </button>
-      {isTimerRunning && (
+      {!!seconds && (
         <div className="selected-letter-container px-4 py-2 my-4 rounded-sm min-w-37.5">
           {selectedLetters.length ? (
             <div className="flex justify-between">
@@ -170,8 +131,8 @@ function App() {
         selectedLettersIds={selectedLetters.map((letter) => letter.id)}
       />
       <ul className="mt-5">
-        {words.map((word, index) => (
-          <li key={index}>{word}</li>
+        {words.map((word) => (
+          <li key={word}>{word}</li>
         ))}
       </ul>
     </div>

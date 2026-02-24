@@ -22,7 +22,7 @@ export default function Dicebox({
           key={letter.id ?? index}
           onLetterSelect={() => onLetterSelect(letter)}
           // todo: change back to value
-          value={letter.index}
+          value={letter.val}
         />
       ))}
     </div>
