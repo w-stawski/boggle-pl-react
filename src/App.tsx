@@ -42,10 +42,10 @@ function App() {
     if (!selectedLetters.length) {
       return true;
     }
-    const currentlySelectedIndex = letter.index as number;
+    const currentlySelectedIndex = letter.index;
     const isTouchingSelected = !!selectedLetters.find(
       (selectedLetter: Letter) => {
-        const previouslySelectedIndex = selectedLetter.index as number;
+        const previouslySelectedIndex = selectedLetter.index;
 
         return (
           previouslySelectedIndex + 1 === currentlySelectedIndex ||
