@@ -6,10 +6,12 @@ export default function Dicebox({
   letters,
   onLetterSelect,
   selectedLettersIds,
+  invalidLetterId,
 }: {
   letters: Letter[];
   onLetterSelect: (letter: Letter) => void;
   selectedLettersIds: string[];
+  invalidLetterId: string;
 }) {
   const checkIfSelected = (id: string): boolean =>
     !!selectedLettersIds?.find((letterId: string) => letterId === id);
@@ -19,6 +21,7 @@ export default function Dicebox({
       {letters.map((letter, index) => (
         <Dice
           isSelected={checkIfSelected(letter.id)}
+          wasInvalid={letter.id === invalidLetterId}
           key={letter.id ?? index}
           onLetterSelect={() => onLetterSelect(letter)}
           // todo: change back to value

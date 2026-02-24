@@ -1,15 +1,39 @@
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .dice-container {
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
+  color: var(--color-dice-font);
   background-color: var(--color-dice-bg);
   border-radius: var(--border-radius-dice);
   box-shadow: var(--box-shadow-dice);
-  font-size: 50px;
   transition: 300ms;
 
   &.selected {
-    background-color: pink;
+    scale: 1.05;
+    background-color: var(--color-dice-bg-accent);
+  }
+
+  &.invalid {
+    opacity: 0.6;
+    animation: shake 0.2s step-end;
   }
 }

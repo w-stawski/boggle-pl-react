@@ -16,6 +16,7 @@ function App() {
   const [round, setRound] = useState(0);
   const [diceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
+  const [invalidLetterId, setiInvalidLetterId] = useState<string>("");
   const [words, setWords] = useState<string[]>([]);
 
   const [showModal, setShowModal] = useState<boolean | null>(null);
@@ -28,12 +29,15 @@ function App() {
   const word = selectedLetters.map((letter: Letter) => letter.val).join(" ");
 
   const handleSelectedLettersUpdate = (selectedLetter: Letter | null): void => {
+    setiInvalidLetterId("");
+
     if (!selectedLetter) {
       setSelectedLetters([]);
       return;
     }
 
     if (!checkIfLetterValid(selectedLetter, selectedLetters)) {
+      setiInvalidLetterId(selectedLetter.id);
       return;
     }
 
@@ -129,6 +133,7 @@ function App() {
         letters={diceValues}
         onLetterSelect={handleSelectedLettersUpdate}
         selectedLettersIds={selectedLetters.map((letter) => letter.id)}
+        invalidLetterId={invalidLetterId}
       />
       <ul className="mt-5">
         {words.map((word) => (

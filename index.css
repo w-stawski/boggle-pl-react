@@ -2,15 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  --color-main-bg: white;
-  --color-button: #6246ea;
+  --color-main-bg: #55423d;
+  --color-button: #ffc0ad;
   --color-border: #e45858;
   --color-shadow: #abd1c6;
-  --color-dice-bg: #e7e7e7;
+  --color-dice-bg: #ffc0ad;
+  --color-dice-bg-accent: #9656a1;
+  --color-dice-font: #271c19;
   --color-dice-alert: red;
   --border-radius-dice: 10%;
   --box-shadow-dice:
-    inset 0 5px white, inset 0 -5px #bbb, inset 5px 0 #d7d7d7,
-    inset -5px 0 #d7d7d7;
+    inset 0 5px rgba(255, 255, 255, 0.45), inset 0 -5px rgba(0, 0, 0, 0.15),
+    inset 5px 0 rgba(255, 255, 255, 0.2), inset -5px 0 rgba(255, 255, 255, 0.2);
   --font-main: "Bebas Neue", sans-serif;
 }
