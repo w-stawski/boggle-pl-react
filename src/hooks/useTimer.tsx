@@ -10,22 +10,21 @@ export const useTimer = (onTimeUp: () => void) => {
   };
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (isTimerRunning) {
-      interval = setInterval(() => {
-        setSeconds((secondsLeft) => {
-          if (!secondsLeft) {
-            setIsTimerRunning(false);
-            onTimeUp();
-            return 0;
-          }
-          return secondsLeft - 1;
-        });
-      }, 1000);
+    if (!isTimerRunning || !seconds) {
+      return;
     }
 
+    const interval = setInterval(() => {
+      setSeconds((secondsLeft) => {
+        if (seconds === 1) {
+          onTimeUp();
+        }
+        return secondsLeft - 1;
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [isTimerRunning, onTimeUp]);
+  }, [isTimerRunning, seconds, onTimeUp]);
 
   return { seconds, startTimer: setupTimer };
 };

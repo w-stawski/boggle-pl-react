@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Londrina+Shadow&display=swap");
 @import "tailwindcss";
 
 @keyframes shake {
@@ -21,16 +22,20 @@
 
 @theme {
   --font-sans: "Bebas Neue", sans-serif;
+  --font-ornate: "Londrina Shadow", sans-serif;
   --color-chocolate: #55423d;
   --color-apricot: #ffc0ad;
   --color-clay-red: #e45858;
   --color-lightmint: #abd1c6;
   --color-dark-orchid: #9656a1;
+  --color-paper-white: #fff3ec;
 
-  --color-ui-background: var(--color-chocolate);
+  --color-ui-main-background: var(--color-chocolate);
+  --color-ui-header-background: var(--color-paper-white);
   --color-ui-button: var(--color-apricot);
   --color-ui-text: black;
   --color-ui-accent: var(--color-dark-orchid);
+  --color-ui-secondary: var(--color-paper-white);
 
   --shadow-dice:
     inset 0 5px rgba(255, 255, 255, 0.45), inset 0 -5px rgba(0, 0, 0, 0.15),

@@ -5,5 +5,5 @@ export interface Letter {
 }
 export interface Word {
   val: string;
-  isIncorrect: boolean;
+  points: number;
 }

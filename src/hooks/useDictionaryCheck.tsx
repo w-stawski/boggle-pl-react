@@ -6,12 +6,18 @@ export const useDictionaryCheck = () => {
   const [checkedWords, setCheckedWords] = useState<Word[]>([]);
 
   const checkWords = (words: Word[]) => {
-    const wordsAfterCheck = words.map((word: Word) => ({
-      ...word,
-      isIncorrect: !dictionaryRef.current.find(
-        (dictEntry: string) => dictEntry === word.val.toLowerCase(),
-      ),
-    }));
+    const wordsAfterCheck = words.map((word: Word) => {
+      const { val } = word;
+      return {
+        ...word,
+        points: dictionaryRef.current.find(
+          (dictEntry: string) => dictEntry === val.toLowerCase(),
+        )
+          ? val.length - 2
+          : 0,
+      };
+    });
+
     setCheckedWords(wordsAfterCheck);
   };
   useEffect(() => {
