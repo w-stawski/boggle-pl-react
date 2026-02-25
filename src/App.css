@@ -27,7 +27,7 @@
   }
   ul {
     font-size: 1rem;
-    li.invalid {
+    li.highlighted {
       color: red;
       text-decoration: line-through;
     }

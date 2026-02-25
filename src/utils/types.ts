@@ -5,5 +5,5 @@ export interface Letter {
 }
 export interface Word {
   val: string;
-  isFalse: boolean;
+  isHighlighted: boolean;
 }

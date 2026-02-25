@@ -14,19 +14,18 @@ export const getDiceRandomValues = (): Letter[] => {
   return randomDiceValues;
 };
 
-export const getDiceValuesWithSetWord = (
-  diceValues: Letter[],
-  word: string,
-) => {
+export const getDiceValuesWithSetWord = (word: string): Letter[] => {
+  const randomValues = getDiceRandomValues();
   if (!word || word.length > 7) {
-    return diceValues;
+    return randomValues;
   }
 
   const wordLetters = [...word];
-  const updatedDiceValues = [...diceValues];
+  const updatedDiceValues = [...randomValues];
 
   wordLetters.forEach((letter: string, index) => {
     const updateDiceIndex = diceWordIndexPattern[index];
+
     updatedDiceValues[updateDiceIndex].val = letter;
   });
 

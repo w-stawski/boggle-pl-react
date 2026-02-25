@@ -32,7 +32,7 @@ function App() {
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
-  const handleSelectedLettersUpdate = (selectedLetter: Letter | null): void => {
+  const handleSelectedLettersUpdate = (selectedLetter: Letter): void => {
     setiInvalidLetterId("");
 
     if (!selectedLetter) {
@@ -72,6 +72,7 @@ function App() {
       return;
     }
 
+    // setDiceValues(getDiceValuesWithSetWord("kurwoj"));
     handleSelectedLettersUpdate(null);
     startTimer();
   };
@@ -84,7 +85,7 @@ function App() {
   };
 
   const onWordAccept = () => {
-    setWords((words) => [...words, { val: word, isFalse: null }]);
+    setWords((words) => [...words, { val: word, isHighlighted: null }]);
     handleSelectedLettersUpdate(null);
   };
 
@@ -99,7 +100,10 @@ function App() {
           <h1>TIME IS UP!</h1>
           <ul className="mt-5">
             {checkedWords.map((word) => (
-              <li className={word.isFalse ? "invalid" : ""} key={word.val}>
+              <li
+                className={word.isHighlighted ? "highlighted" : ""}
+                key={word.val}
+              >
                 {word.val}
               </li>
             ))}
