@@ -21,15 +21,15 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
-  color: var(--color-dice-font);
-  background-color: var(--color-dice-bg);
+  color: var(--color-main-font);
+  background-color: var(--color-button-bg);
   border-radius: var(--border-radius-dice);
   box-shadow: var(--box-shadow-dice);
   transition: 300ms;
 
   &.selected {
     scale: 1.05;
-    background-color: var(--color-dice-bg-accent);
+    background-color: var(--color-button-bg-accent);
   }
 
   &.invalid {

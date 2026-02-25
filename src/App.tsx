@@ -5,10 +5,11 @@ import {
   getDicePlaceholders,
   getDiceRandomValues,
 } from "./utils/letters.js";
-import type { Letter } from "./utils/types.js";
+import type { Letter, Word } from "./utils/types.js";
 import Dicebox from "./components/Dicebox/Dicebox.js";
 import "./App.css";
 import { useTimer } from "./hooks/useTimer.js";
+import { useDictionaryCheck } from "./hooks/useDictionaryCheck.js";
 
 const lettersPlaceHolder = getDicePlaceholders();
 
@@ -17,16 +18,19 @@ function App() {
   const [diceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [invalidLetterId, setiInvalidLetterId] = useState<string>("");
-  const [words, setWords] = useState<string[]>([]);
+  const [words, setWords] = useState<Word[]>([]);
 
   const [showModal, setShowModal] = useState<boolean | null>(null);
 
-  const { seconds, startTimer } = useTimer(10, () => {
+  const { seconds, startTimer } = useTimer(10000, () => {
     setSelectedLetters([]);
     setShowModal(true);
+    checkWords(words);
   });
 
-  const word = selectedLetters.map((letter: Letter) => letter.val).join(" ");
+  const { checkedWords, checkWords } = useDictionaryCheck();
+
+  const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
   const handleSelectedLettersUpdate = (selectedLetter: Letter | null): void => {
     setiInvalidLetterId("");
@@ -80,13 +84,13 @@ function App() {
   };
 
   const onWordAccept = () => {
-    setWords((words) => [...words, word]);
+    setWords((words) => [...words, { val: word, isFalse: null }]);
     handleSelectedLettersUpdate(null);
   };
 
   return (
     <div className="main-container">
-      {/*  TODO: use portal, change to modal, user set round limit time limit, make modal reusable */}
+      {/*  TODO: use portal, change to modal, user set round limit time limit, make modal reusable, intro, check, points */}
       {showModal && (
         <div
           onClick={() => setupNextRound()}
@@ -94,8 +98,10 @@ function App() {
         >
           <h1>TIME IS UP!</h1>
           <ul className="mt-5">
-            {words.map((word) => (
-              <li key={word}>{word}</li>
+            {checkedWords.map((word) => (
+              <li className={word.isFalse ? "invalid" : ""} key={word.val}>
+                {word.val}
+              </li>
             ))}
           </ul>
         </div>
@@ -137,7 +143,7 @@ function App() {
       />
       <ul className="mt-5">
         {words.map((word) => (
-          <li key={word}>{word}</li>
+          <li key={word.val}>{word.val}</li>
         ))}
       </ul>
     </div>

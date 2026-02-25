@@ -3,3 +3,7 @@ export interface Letter {
   id: string;
   position: { row: number; column: number };
 }
+export interface Word {
+  val: string;
+  isFalse: boolean;
+}

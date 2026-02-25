@@ -12,8 +12,8 @@
   font-size: 1.5rem;
 
   button {
-    color: var(--color-button);
-    background-color: var(--color-dice-bg);
+    color: var(--color-main-font);
+    background-color: var(--color-button-bg);
     box-shadow: var(--box-shadow-dice);
     transition: 1s;
 
@@ -27,5 +27,9 @@
   }
   ul {
     font-size: 1rem;
+    li.invalid {
+      color: red;
+      text-decoration: line-through;
+    }
   }
 }
