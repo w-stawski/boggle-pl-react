@@ -6,6 +6,7 @@ export const useDictionaryCheck = () => {
   const [checkedWords, setCheckedWords] = useState<Word[]>([]);
 
   const checkWords = (words: Word[]) => {
+    // todo: check duplicates
     const wordsAfterCheck = words.map((word: Word) => {
       const { val } = word;
       return {
