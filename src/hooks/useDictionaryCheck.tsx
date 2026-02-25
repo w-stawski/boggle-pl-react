@@ -8,7 +8,7 @@ export const useDictionaryCheck = () => {
   const checkWords = (words: Word[]) => {
     const wordsAfterCheck = words.map((word: Word) => ({
       ...word,
-      isHighlighted: !dictionaryRef.current.find(
+      isIncorrect: !dictionaryRef.current.find(
         (dictEntry: string) => dictEntry === word.val.toLowerCase(),
       ),
     }));

@@ -1,31 +1,36 @@
 import Dice from "../Dice/Dice";
-import "./Dicebox.css";
+
 import type { Letter } from "../../utils/types";
 
+interface DiceboxProps {
+  letters: Letter[];
+  invalidLetterId: string;
+  selectedLettersIds: string[];
+  isDisabled?: boolean;
+  onLetterSelect: (letter: Letter) => void;
+}
+
 export default function Dicebox({
+  invalidLetterId,
+  isDisabled,
   letters,
   onLetterSelect,
   selectedLettersIds,
-  invalidLetterId,
-}: {
-  letters: Letter[];
-  onLetterSelect: (letter: Letter) => void;
-  selectedLettersIds: string[];
-  invalidLetterId: string;
-}) {
+}: DiceboxProps) {
   const checkIfSelected = (id: string): boolean =>
     !!selectedLettersIds?.find((letterId: string) => letterId === id);
 
   return (
-    <div className="dicebox-container">
+    <div
+      className={`grid grid-cols-4 gap-2 aspect-square transition-opacity duration-300 ${isDisabled ? "opacity-50  pointer-events-none" : ""}`}
+    >
       {letters.map((letter, index) => (
         <Dice
           isSelected={checkIfSelected(letter.id)}
           wasInvalid={letter.id === invalidLetterId}
           key={letter.id ?? index}
           onLetterSelect={() => onLetterSelect(letter)}
-          // todo: change back to value
-          value={letter.val}
+          value={letter.val} // todo: change back to value
         />
       ))}
     </div>

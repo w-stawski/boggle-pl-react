@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export const useTimer = (countdownTime: number, onTimeUp: () => void) => {
-  const [seconds, setSeconds] = useState(countdownTime);
+export const useTimer = (onTimeUp: () => void) => {
+  const [seconds, setSeconds] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
-  const setupTimer = () => {
+  const setupTimer = (countdownTime: number) => {
     setSeconds(countdownTime);
     setIsTimerRunning(true);
   };

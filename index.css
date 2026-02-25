@@ -1,18 +1,40 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 @import "tailwindcss";
 
-:root {
-  --color-main-bg: #55423d;
-  --color-button: #ffc0ad;
-  --color-border: #e45858;
-  --color-shadow: #abd1c6;
-  --color-button-bg: #ffc0ad;
-  --color-button-bg-accent: #9656a1;
-  --color-dice-font: #271c19;
-  --color-dice-alert: red;
-  --border-radius-dice: 10%;
-  --box-shadow-dice:
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@theme {
+  --font-sans: "Bebas Neue", sans-serif;
+  --color-chocolate: #55423d;
+  --color-apricot: #ffc0ad;
+  --color-clay-red: #e45858;
+  --color-lightmint: #abd1c6;
+  --color-dark-orchid: #9656a1;
+
+  --color-ui-background: var(--color-chocolate);
+  --color-ui-button: var(--color-apricot);
+  --color-ui-text: black;
+  --color-ui-accent: var(--color-dark-orchid);
+
+  --shadow-dice:
     inset 0 5px rgba(255, 255, 255, 0.45), inset 0 -5px rgba(0, 0, 0, 0.15),
     inset 5px 0 rgba(255, 255, 255, 0.2), inset -5px 0 rgba(255, 255, 255, 0.2);
-  --font-main: "Bebas Neue", sans-serif;
+
+  --animate-shake: shake 0.2s step-end;
 }

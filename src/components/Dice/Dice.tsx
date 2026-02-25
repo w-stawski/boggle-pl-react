@@ -1,25 +1,28 @@
-import "./Dice.css";
-
-export default function Dice({
-  value,
-  onLetterSelect,
-  wasInvalid,
-  isSelected,
-}: {
+interface DiceProps {
   value: string;
   isSelected: boolean;
   wasInvalid: boolean;
   onLetterSelect: () => void;
-}) {
-  const isSelectedClass = isSelected ? "selected" : "";
-  const isInvalidClass = wasInvalid ? "invalid" : "";
+}
+
+export default function Dice({
+  isSelected,
+  onLetterSelect,
+  value,
+  wasInvalid,
+}: DiceProps) {
+  const isSelectedClass = isSelected
+    ? "scale-105 bg-ui-accent"
+    : "bg-ui-button";
+  const isInvalidClass = wasInvalid ? "animate-shake" : "";
   return (
     // change to button ?
-    <div
+    <button
       onClick={onLetterSelect}
-      className={`dice-container text-7xl ${isSelectedClass} ${isInvalidClass}`}
+      className={`flex justify-center items-center rounded-xl
+        shadow-dice aspect-square text-6xl duration-200 ${isSelectedClass} ${isInvalidClass}`}
     >
       {value}
-    </div>
+    </button>
   );
 }

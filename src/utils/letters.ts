@@ -51,6 +51,3 @@ export const checkIfLetterValid = (
 
   return rowDistance <= 1 && columnDistance <= 1;
 };
-
-export const getDicePlaceholders = (): Letter[] =>
-  Array(16).fill({ val: "X", id: null });

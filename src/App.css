@@ -1,35 +1,7 @@
-* {
-  font-family: var(--font-main);
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  background-color: var(--color-main-bg);
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-
-  button {
-    color: var(--color-main-font);
-    background-color: var(--color-button-bg);
-    box-shadow: var(--box-shadow-dice);
-    transition: 1s;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-
-  p.alert {
+ul {
+  font-size: 1rem;
+  li.highlighted {
     color: red;
-  }
-  ul {
-    font-size: 1rem;
-    li.highlighted {
-      color: red;
-      text-decoration: line-through;
-    }
+    text-decoration: line-through;
   }
 }

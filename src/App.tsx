@@ -1,28 +1,23 @@
 import { useState } from "react";
 
-import {
-  checkIfLetterValid,
-  getDicePlaceholders,
-  getDiceRandomValues,
-} from "./utils/letters.js";
-import type { Letter, Word } from "./utils/types.js";
-import Dicebox from "./components/Dicebox/Dicebox.js";
 import "./App.css";
-import { useTimer } from "./hooks/useTimer.js";
+import Button from "./components/Button/Button.js";
+import Dicebox from "./components/Dicebox/Dicebox.js";
 import { useDictionaryCheck } from "./hooks/useDictionaryCheck.js";
-
-const lettersPlaceHolder = getDicePlaceholders();
-
+import { useTimer } from "./hooks/useTimer.js";
+import { checkIfLetterValid, getDiceRandomValues } from "./utils/letters.js";
+import type { Letter, Word } from "./utils/types.js";
+import Wordslist from "./components/Wordslist/Wordslist.js";
 function App() {
-  const [round, setRound] = useState(0);
-  const [diceValues, setDiceValues] = useState<Letter[]>(lettersPlaceHolder);
-  const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
+  const [diceValues, setDiceValues] = useState<Letter[]>(getDiceRandomValues());
   const [invalidLetterId, setiInvalidLetterId] = useState<string>("");
+  const [round, setRound] = useState(1);
+  const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
 
   const [showModal, setShowModal] = useState<boolean | null>(null);
 
-  const { seconds, startTimer } = useTimer(10000, () => {
+  const { seconds, startTimer } = useTimer(() => {
     setSelectedLetters([]);
     setShowModal(true);
     checkWords(words);
@@ -74,7 +69,7 @@ function App() {
 
     // setDiceValues(getDiceValuesWithSetWord("kurwoj"));
     handleSelectedLettersUpdate(null);
-    startTimer();
+    startTimer(90);
   };
 
   const setupNextRound = () => {
@@ -85,72 +80,78 @@ function App() {
   };
 
   const onWordAccept = () => {
-    setWords((words) => [...words, { val: word, isHighlighted: null }]);
+    setWords((words) => [...words, { val: word, isIncorrect: null }]);
     handleSelectedLettersUpdate(null);
   };
 
   return (
-    <div className="main-container">
-      {/*  TODO: use portal, change to modal, user set round limit time limit, make modal reusable, intro, check, points */}
-      {showModal && (
-        <div
-          onClick={() => setupNextRound()}
-          className="absolute w-screen h-screen bg-gray-600 p-10"
-        >
-          <h1>TIME IS UP!</h1>
+    <>
+      <div className="grid grid-cols-4 justify-items-center">
+        <div className="hidden lg:block w-full">
+          <Wordslist words={words} />
+        </div>
+        <div className="col-span-4 lg:col-span-2 flex flex-col justify-center w-full gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
+          {/*  TODO: use portal, change to modal, user set round limit time limit, make modal reusable, intro, header, footer ,favicon, points */}
+          {showModal && (
+            <div
+              onClick={() => setupNextRound()}
+              className="absolute w-screen h-screen bg-gray-600 p-10"
+            >
+              <h1>TIME IS UP!</h1>
+              <ul className="mt-5">
+                {checkedWords.map((word) => (
+                  <li
+                    className={word.isIncorrect ? "highlighted" : ""}
+                    key={word.val}
+                  >
+                    {word.val}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <section className="text-center">
+            <p>Round: {round}</p>
+
+            <p
+              className={`${!seconds ? "invisible" : ""} ${seconds < 10 ? "text-ui-accent bg-black" : ""}`}
+            >
+              Seconds Remaining: {seconds}
+            </p>
+          </section>
+          <Button isDisabled={!!seconds} onClickFn={() => onDiceRoll(15)}>
+            roll the dice
+          </Button>
+          {
+            <div className="bg-white px-4 py-2 rounded-sm shadow-dice">
+              <div className="flex justify-between">
+                <span className="flex items-center text-2xl  sm:text-3xl md:text-4xl">
+                  {word ? word : "..."}
+                </span>
+                <Button
+                  onClickFn={onWordAccept}
+                  isDisabled={selectedLetters.length < 3}
+                >
+                  OK
+                </Button>
+              </div>
+            </div>
+          }
+          <Dicebox
+            letters={diceValues}
+            onLetterSelect={handleSelectedLettersUpdate}
+            selectedLettersIds={selectedLetters.map((letter) => letter.id)}
+            invalidLetterId={invalidLetterId}
+            isDisabled={!seconds}
+          />
           <ul className="mt-5">
-            {checkedWords.map((word) => (
-              <li
-                className={word.isHighlighted ? "highlighted" : ""}
-                key={word.val}
-              >
-                {word.val}
-              </li>
+            {words.map((word) => (
+              <li key={word.val}>{word.val}</li>
             ))}
           </ul>
         </div>
-      )}
-      <div className="flex m-3">
-        <p className="mr-3">Round: {round}</p>
-        {!!seconds && (
-          <p className={seconds < 10 ? "alert" : ""}>
-            Seconds Remaining: {seconds}
-          </p>
-        )}
       </div>
-      <button className="rounded-sm p-4 mb-3" onClick={() => onDiceRoll(15)}>
-        roll the dice
-      </button>
-      {!!seconds && (
-        <div className="selected-letter-container px-4 py-2 my-4 rounded-sm min-w-37.5">
-          {selectedLetters.length ? (
-            <div className="flex justify-between">
-              <h1>{word}</h1>
-              <button
-                onClick={onWordAccept}
-                className="rounded-sm px-2 ml-4"
-                disabled={selectedLetters.length < 3}
-              >
-                OK
-              </button>
-            </div>
-          ) : (
-            <p>select letters</p>
-          )}
-        </div>
-      )}
-      <Dicebox
-        letters={diceValues}
-        onLetterSelect={handleSelectedLettersUpdate}
-        selectedLettersIds={selectedLetters.map((letter) => letter.id)}
-        invalidLetterId={invalidLetterId}
-      />
-      <ul className="mt-5">
-        {words.map((word) => (
-          <li key={word.val}>{word.val}</li>
-        ))}
-      </ul>
-    </div>
+    </>
   );
 }
 
