@@ -1,35 +1,29 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useState } from "react";
 import type { Word } from "../utils/types";
 
 export const useDictionaryCheck = () => {
-  const dictionaryRef: RefObject<string[]> = useRef([]);
   const [checkedWords, setCheckedWords] = useState<Word[]>([]);
 
-  const checkWords = (words: Word[]) => {
+  const checkWords = async (words: Word[]) => {
     // todo: check duplicates
-    const wordsAfterCheck = words.map((word: Word) => {
-      const { val } = word;
-      return {
-        ...word,
-        points: dictionaryRef.current.find(
-          (dictEntry: string) => dictEntry === val.toLowerCase(),
-        )
-          ? val.length - 2
-          : 0,
-      };
-    });
+    try {
+      const resp = await fetch(
+        "https://sjp-check-api.vercel.app/validate-words-boggle",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ words }),
+        },
+      );
+      const parsedResp = await resp.json();
 
-    setCheckedWords(wordsAfterCheck);
+      setCheckedWords(parsedResp);
+    } catch (error) {
+      console.log(error, "word check failed");
+    }
   };
-  useEffect(() => {
-    fetch("/dictionary.txt")
-      .then((res) => res.text())
-      .then((text) => {
-        const words = text.split(/\r?\n/);
-
-        dictionaryRef.current = words;
-      });
-  }, []);
 
   return { checkedWords, checkWords: checkWords };
 };
