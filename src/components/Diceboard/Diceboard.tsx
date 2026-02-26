@@ -19,7 +19,7 @@ export default memo(function Diceboard({
   selectedLettersIds,
 }: DiceboardProps) {
   const checkIfSelected = (id: string): boolean =>
-    !!selectedLettersIds?.find((letterId: string) => letterId === id);
+    selectedLettersIds?.some((letterId: string) => letterId === id);
 
   return (
     <div

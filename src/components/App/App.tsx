@@ -8,6 +8,7 @@ import Modal from "../Modal/Modal.js";
 import Wordslist from "../Wordslist/Wordslist.js";
 
 import {
+  checkIfLetterArrValid,
   checkIfLetterValid,
   getDiceRandomValues,
   getLetterArrWithNewLetter,
@@ -71,14 +72,24 @@ function App() {
   );
 
   const onWordAccept = useCallback((): void => {
+    const areLettersConnected = checkIfLetterArrValid(selectedLetters);
+    if (!areLettersConnected) {
+      alert("Letters were not connected!");
+    }
     setWords((words) => {
       const isWordDuplicate = words.find(
         (previousWord: Word) => previousWord.val === word,
       );
-      return isWordDuplicate ? words : [...words, { val: word, points: null }];
+
+      if (isWordDuplicate) {
+        alert("Word duplicated!");
+      }
+      return isWordDuplicate || areLettersConnected
+        ? words
+        : [...words, { val: word, points: null }];
     });
     handleSelectedLettersUpdate(null);
-  }, [handleSelectedLettersUpdate, word]);
+  }, [handleSelectedLettersUpdate, word, selectedLetters]);
 
   const setupNextRound = (): void => {
     setShowModal(false);

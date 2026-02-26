@@ -47,7 +47,11 @@ export const getLetterArrWithNewLetter = (
     return true;
   });
 
-  return letterDuplicated ? filteredLetterArr : [...lettersArr, selectedLetter];
+  const updatedLettersArr = letterDuplicated
+    ? filteredLetterArr
+    : [...lettersArr, selectedLetter];
+
+  return updatedLettersArr;
 };
 
 export const checkIfLetterValid = (
@@ -68,4 +72,16 @@ export const checkIfLetterValid = (
   );
 
   return rowDistance <= 1 && columnDistance <= 1;
+};
+
+export const checkIfLetterArrValid = (letters: Letter[]) => {
+  const hasError = letters.some((letter: Letter) => {
+    const arrWithoutCheckedLetter = letters.filter(
+      (filterLetter: Letter) => filterLetter.id !== letter.id,
+    );
+
+    return checkIfLetterValid(letter, arrWithoutCheckedLetter);
+  });
+
+  return hasError;
 };
