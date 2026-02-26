@@ -44,3 +44,8 @@
 
   --animate-shake: shake 0.2s step-end;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+}
