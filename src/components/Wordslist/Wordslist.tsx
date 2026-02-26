@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Word } from "../../utils/types";
 
 interface WordslistProps {
@@ -5,18 +6,23 @@ interface WordslistProps {
   isFinalBoard?: boolean;
 }
 
-export default function Wordslist({ words, isFinalBoard }: WordslistProps) {
-  let total = 0;
-  const template = words.reverse().map((word: Word) => {
+export default memo(function Wordslist({
+  words,
+  isFinalBoard,
+}: WordslistProps) {
+  const total = isFinalBoard
+    ? words.reduce((acc, word) => acc + word.points, 0)
+    : null;
+
+  const template = words.map((word: Word) => {
     const { val, points } = word;
-    total = total + points;
     return points === 0 ? (
-      <li className="line-through" key={crypto.randomUUID()}>
+      <li className="line-through" key={word.val}>
         {val}
       </li>
     ) : (
-      <li key={crypto.randomUUID()}>
-        {val}: {points}
+      <li key={word.val}>
+        {val} {points}
       </li>
     );
   });
@@ -30,4 +36,4 @@ export default function Wordslist({ words, isFinalBoard }: WordslistProps) {
       )}
     </div>
   );
-}
+});

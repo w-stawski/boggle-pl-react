@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
 import { useTimer } from "../../hooks/useTimer.js";
@@ -30,41 +30,46 @@ function App() {
     checkWords(words);
   });
 
-  const { checkedWords, checkWords } = useDictionaryCheck();
+  const { checkedWords, checkWords, resetCheckedWords } = useDictionaryCheck();
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
+  const handleSelectedLettersUpdate = useCallback(
+    (selectedLetter: Letter): void => {
+      setInvalidLetterId("");
 
-  const onDiceRoll = (repeat: number): void => {
-    setDiceValues(getDiceRandomValues());
+      if (!selectedLetter) {
+        setSelectedLetters([]);
+        return;
+      }
 
-    if (repeat) {
-      setTimeout(() => onDiceRoll(--repeat), 50);
-      return;
-    }
+      if (!checkIfLetterValid(selectedLetter, selectedLetters)) {
+        setInvalidLetterId(selectedLetter.id);
+        return;
+      }
 
-    handleSelectedLettersUpdate(null);
-    startTimer(9);
-  };
+      setSelectedLetters((lettersArr) =>
+        getLetterArrWithNewLetter(selectedLetter, lettersArr),
+      );
+    },
+    [selectedLetters],
+  );
 
-  const handleSelectedLettersUpdate = (selectedLetter: Letter): void => {
-    setInvalidLetterId("");
+  const onDiceRoll = useCallback(
+    (repeat: number): void => {
+      setDiceValues(getDiceRandomValues());
 
-    if (!selectedLetter) {
-      setSelectedLetters([]);
-      return;
-    }
+      if (repeat) {
+        setTimeout(() => onDiceRoll(--repeat), 50);
+        return;
+      }
 
-    if (!checkIfLetterValid(selectedLetter, selectedLetters)) {
-      setInvalidLetterId(selectedLetter.id);
-      return;
-    }
+      handleSelectedLettersUpdate(null);
+      startTimer(9);
+    },
+    [startTimer, handleSelectedLettersUpdate],
+  );
 
-    setSelectedLetters((lettersArr) =>
-      getLetterArrWithNewLetter(selectedLetter, lettersArr),
-    );
-  };
-
-  const onWordAccept = (): void => {
+  const onWordAccept = useCallback((): void => {
     setWords((words) => {
       const isWordDuplicate = words.find(
         (previousWord: Word) => previousWord.val === word,
@@ -72,12 +77,13 @@ function App() {
       return isWordDuplicate ? words : [...words, { val: word, points: null }];
     });
     handleSelectedLettersUpdate(null);
-  };
+  }, [handleSelectedLettersUpdate, word]);
 
   const setupNextRound = (): void => {
     setShowModal(false);
     setSelectedLetters([]);
     setWords([]);
+    resetCheckedWords();
     setRound((count) => ++count);
   };
 
@@ -94,7 +100,7 @@ function App() {
           <Wordslist words={words} />
         </div>
         <div className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
-          {/*  TODO user set round limit time limit, intro , footer , users, lang, localstorage */}
+          {/*  TODO user set round limit time limit, intro , footer , users, lang, localstorage, 2 players, rules */}
           <section className="flex justify-between text-ui-secondary opacity-95">
             <p>Round: {round}</p>
             <p

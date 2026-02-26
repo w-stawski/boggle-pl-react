@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Button from "../Button/Button";
 
 interface WordboxProps {
@@ -6,7 +7,7 @@ interface WordboxProps {
   isDisabled: boolean;
 }
 
-export default function Wordbox({
+export default memo(function Wordbox({
   word,
   onOkClickFn,
   isDisabled,
@@ -23,4 +24,4 @@ export default function Wordbox({
       </div>
     </div>
   );
-}
+});

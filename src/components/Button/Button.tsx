@@ -1,11 +1,11 @@
-import type { PropsWithChildren } from "react";
+import { memo, type PropsWithChildren } from "react";
 
 interface ButtonProps {
   onClickFn: () => void;
   isDisabled?: boolean;
 }
 
-export default function Button({
+export default memo(function Button({
   children,
   isDisabled,
   onClickFn,
@@ -19,4 +19,4 @@ export default function Button({
       {children}
     </button>
   );
-}
+});

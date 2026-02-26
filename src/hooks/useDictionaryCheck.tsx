@@ -1,7 +1,11 @@
 import { useState } from "react";
 import type { Word } from "../utils/types";
 
-export const useDictionaryCheck = () => {
+export const useDictionaryCheck = (): {
+  checkedWords: Word[];
+  checkWords: (words: Word[]) => Promise<void>;
+  resetCheckedWords: () => void;
+} => {
   const [checkedWords, setCheckedWords] = useState<Word[]>([]);
 
   const checkWords = async (words: Word[]) => {
@@ -25,5 +29,9 @@ export const useDictionaryCheck = () => {
     }
   };
 
-  return { checkedWords, checkWords: checkWords };
+  const resetCheckedWords = () => {
+    setCheckedWords([]);
+  };
+
+  return { checkedWords, checkWords, resetCheckedWords };
 };

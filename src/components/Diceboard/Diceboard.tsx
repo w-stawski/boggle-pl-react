@@ -1,6 +1,7 @@
 import Dice from "../Dice/Dice";
 
 import type { Letter } from "../../utils/types";
+import { memo } from "react";
 
 interface DiceboardProps {
   letters: Letter[];
@@ -10,7 +11,7 @@ interface DiceboardProps {
   onLetterSelect: (letter: Letter) => void;
 }
 
-export default function Diceboard({
+export default memo(function Diceboard({
   invalidLetterId,
   isDisabled,
   letters,
@@ -35,4 +36,4 @@ export default function Diceboard({
       ))}
     </div>
   );
-}
+});
