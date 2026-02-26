@@ -66,7 +66,7 @@ function Game() {
       }
 
       handleSelectedLettersUpdate(null);
-      startTimer(90);
+      startTimer(5);
     },
     [startTimer, handleSelectedLettersUpdate],
   );
@@ -77,14 +77,13 @@ function Game() {
       alert("Letters were not connected!");
     }
     setWords((words) => {
-      const isWordDuplicate = words.find(
+      const isWordDuplicate = words.some(
         (previousWord: Word) => previousWord.val === word,
       );
-
       if (isWordDuplicate) {
         alert("Word duplicated!");
       }
-      return isWordDuplicate || areLettersConnected
+      return isWordDuplicate || !areLettersConnected
         ? words
         : [...words, { val: word, points: null }];
     });
