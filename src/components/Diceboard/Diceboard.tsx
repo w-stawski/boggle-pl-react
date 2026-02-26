@@ -2,7 +2,7 @@ import Dice from "../Dice/Dice";
 
 import type { Letter } from "../../utils/types";
 
-interface DiceboxProps {
+interface DiceboardProps {
   letters: Letter[];
   invalidLetterId: string;
   selectedLettersIds: string[];
@@ -10,13 +10,13 @@ interface DiceboxProps {
   onLetterSelect: (letter: Letter) => void;
 }
 
-export default function Dicebox({
+export default function Diceboard({
   invalidLetterId,
   isDisabled,
   letters,
   onLetterSelect,
   selectedLettersIds,
-}: DiceboxProps) {
+}: DiceboardProps) {
   const checkIfSelected = (id: string): boolean =>
     !!selectedLettersIds?.find((letterId: string) => letterId === id);
 

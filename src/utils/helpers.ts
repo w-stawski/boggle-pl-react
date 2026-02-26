@@ -32,6 +32,24 @@ export const getDiceValuesWithSetWord = (word: string): Letter[] => {
   return updatedDiceValues;
 };
 
+export const getLetterArrWithNewLetter = (
+  selectedLetter: Letter,
+  lettersArr: Letter[],
+): Letter[] => {
+  let letterDuplicated = false;
+  const filteredLetterArr = lettersArr.filter((letter) => {
+    if (letter.id === selectedLetter.id) {
+      letterDuplicated = true;
+
+      return false;
+    }
+
+    return true;
+  });
+
+  return letterDuplicated ? filteredLetterArr : [...lettersArr, selectedLetter];
+};
+
 export const checkIfLetterValid = (
   letter: Letter,
   selectedLetters: Letter[],
