@@ -66,7 +66,7 @@ function Game() {
       }
 
       handleSelectedLettersUpdate(null);
-      startTimer(5);
+      startTimer(90);
     },
     [startTimer, handleSelectedLettersUpdate],
   );
