@@ -9,7 +9,7 @@ export default function Modal({
   return createPortal(
     <div
       onClick={onCloseFn}
-      className="fixed w-full h-full z-1 bg-amber-300 opacity-95"
+      className="fixed w-full h-full z-1 bg-ui-tertiary opacity-95"
     >
       {children}
     </div>,

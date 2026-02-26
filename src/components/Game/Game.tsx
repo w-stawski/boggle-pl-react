@@ -16,7 +16,7 @@ import {
 import type { Letter, Word } from "../../utils/types.js";
 import Wordbox from "../Wordbox/Wordbox.js";
 
-function App() {
+function Game() {
   const [diceValues, setDiceValues] = useState<Letter[]>(getDiceRandomValues());
   const [invalidLetterId, setInvalidLetterId] = useState<string>("");
   const [round, setRound] = useState(1);
@@ -101,12 +101,6 @@ function App() {
 
   return (
     <>
-      <header>
-        <div className="flex items-center h-12 pl-10 mb-2 bg-ui-header-background text-2xl">
-          <p className="font-ornate text-3xl">Poggle</p>
-        </div>
-      </header>
-
       <div className="grid grid-cols-4 justify-items-center">
         <div className="hidden md:block max-h-[50dvh] my-auto overflow-hidden">
           <Wordslist words={words} />
@@ -121,7 +115,11 @@ function App() {
               Seconds Remaining: {seconds}
             </p>
           </section>
-          <Button isDisabled={!!seconds} onClickFn={() => onDiceRoll(15)}>
+          <Button
+            isDisabled={!!seconds}
+            highlighted
+            onClickFn={() => onDiceRoll(15)}
+          >
             roll the dice
           </Button>
           <Wordbox
@@ -152,4 +150,4 @@ function App() {
   );
 }
 
-export default App;
+export default Game;

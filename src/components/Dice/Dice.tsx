@@ -13,7 +13,7 @@ export default function Dice({
 }: DiceProps) {
   const isSelectedClass = isSelected
     ? "scale-105 bg-ui-accent"
-    : "bg-ui-button";
+    : "bg-ui-primary";
   const isInvalidClass = wasInvalid ? "animate-shake" : "";
   return (
     // change to button ?

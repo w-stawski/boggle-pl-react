@@ -30,12 +30,13 @@
   --color-dark-orchid: #9656a1;
   --color-paper-white: #fff3ec;
 
-  --color-ui-main-background: var(--color-chocolate);
-  --color-ui-header-background: var(--color-paper-white);
-  --color-ui-button: var(--color-apricot);
-  --color-ui-text: black;
-  --color-ui-accent: var(--color-dark-orchid);
+  --color-ui-primary: var(--color-apricot);
   --color-ui-secondary: var(--color-paper-white);
+  --color-ui-accent: var(--color-dark-orchid);
+  --color-ui-tertiary: var(--color-amber-300);
+  --color-ui-text: black;
+  --color-ui-main-background: var(--color-chocolate);
+  --color-ui-secondary-background: var(--color-paper-white);
 
   --shadow-dice:
     inset 0 5px rgba(255, 255, 255, 0.45), inset 0 -5px rgba(0, 0, 0, 0.15),
