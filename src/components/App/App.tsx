@@ -65,7 +65,7 @@ function App() {
       }
 
       handleSelectedLettersUpdate(null);
-      startTimer(9);
+      startTimer(90);
     },
     [startTimer, handleSelectedLettersUpdate],
   );
@@ -97,7 +97,7 @@ function App() {
       </header>
 
       <div className="grid grid-cols-4 justify-items-center">
-        <div className="hidden md:block w-full">
+        <div className="hidden md:block max-h-[50dvh] my-auto overflow-hidden">
           <Wordslist words={words} />
         </div>
         <div className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">

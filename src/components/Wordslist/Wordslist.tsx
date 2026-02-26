@@ -35,7 +35,7 @@ export default memo(function Wordslist({
   return (
     <div className="flex flex-col items-center justify-center h-full text-3xl">
       {isFinalBoard && <h1 className="underline">Results</h1>}
-      <ul className="text-center my-3">{template}</ul>
+      <ul className="text-center max-h-3/4 overflow-hidden my-3">{template}</ul>
 
       {isFinalBoard && (
         <p className="underline text-ui-accent">Total: {total}</p>
