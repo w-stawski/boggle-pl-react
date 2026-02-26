@@ -3,7 +3,7 @@ import { memo, type PropsWithChildren } from "react";
 interface ButtonProps {
   onClickFn: () => void;
   isDisabled?: boolean;
-  highlighted: boolean;
+  highlighted?: boolean;
 }
 
 export default memo(function Button({
