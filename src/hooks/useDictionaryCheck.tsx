@@ -3,14 +3,16 @@ import type { Word } from "../utils/types";
 
 export const useDictionaryCheck = (): {
   checkedWords: Word[];
+  areResultsLoading: boolean;
   checkWords: (words: Word[]) => Promise<void>;
   resetCheckedWords: () => void;
 } => {
   const [checkedWords, setCheckedWords] = useState<Word[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const checkWords = async (words: Word[]) => {
-    // todo: check duplicates
     try {
+      setIsLoading(true);
       const resp = await fetch(
         "https://sjp-check-api.vercel.app/validate-words-boggle",
         {
@@ -24,7 +26,9 @@ export const useDictionaryCheck = (): {
       const parsedResp = await resp.json();
 
       setCheckedWords(parsedResp);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.log(error, "word check failed");
     }
   };
@@ -33,5 +37,10 @@ export const useDictionaryCheck = (): {
     setCheckedWords([]);
   };
 
-  return { checkedWords, checkWords, resetCheckedWords };
+  return {
+    areResultsLoading: isLoading,
+    checkedWords,
+    checkWords,
+    resetCheckedWords,
+  };
 };

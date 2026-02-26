@@ -4,28 +4,34 @@ import type { Word } from "../../utils/types";
 interface WordslistProps {
   words: Word[];
   isFinalBoard?: boolean;
+  isLoading?: boolean;
 }
 
 export default memo(function Wordslist({
   words,
   isFinalBoard,
+  isLoading,
 }: WordslistProps) {
   const total = isFinalBoard
     ? words.reduce((acc, word) => acc + word.points, 0)
     : null;
 
-  const template = words.map((word: Word) => {
-    const { val, points } = word;
-    return points === 0 ? (
-      <li className="line-through" key={word.val}>
-        {val}
-      </li>
-    ) : (
-      <li key={word.val}>
-        {val} {points}
-      </li>
-    );
-  });
+  const template = isLoading ? (
+    <p>checking...</p>
+  ) : (
+    words.map((word: Word) => {
+      const { val, points } = word;
+      return points === 0 ? (
+        <li className="line-through" key={word.val}>
+          {val}
+        </li>
+      ) : (
+        <li key={word.val}>
+          {val} {points}
+        </li>
+      );
+    })
+  );
   return (
     <div className="flex flex-col items-center justify-center h-full text-3xl">
       {isFinalBoard && <h1 className="underline">Results</h1>}

@@ -30,7 +30,8 @@ function App() {
     checkWords(words);
   });
 
-  const { checkedWords, checkWords, resetCheckedWords } = useDictionaryCheck();
+  const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
+    useDictionaryCheck();
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
   const handleSelectedLettersUpdate = useCallback(
@@ -129,7 +130,11 @@ function App() {
 
       {showModal && (
         <Modal onCloseFn={setupNextRound}>
-          <Wordslist words={checkedWords} isFinalBoard />
+          <Wordslist
+            words={checkedWords}
+            isLoading={areResultsLoading}
+            isFinalBoard
+          />
         </Modal>
       )}
     </>
