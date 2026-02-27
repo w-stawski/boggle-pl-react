@@ -6,14 +6,17 @@ import { SettingsContext } from "../../contexts/SettingsContext";
 
 export default function Setup() {
   const { mode } = useParams<{ mode: GameMode }>();
-  const { setRoundLimit, setTimeLimit } = useContext(SettingsContext);
+  const { setRoundLimit, setTimeLimit, setIsWordBreakingAllowed } =
+    useContext(SettingsContext);
   const navigate = useNavigate();
   const onSubmit = (formData: FormData) => {
     const timeLimit = formData.get("time-limit");
     const roundLimit = formData.get("round-limit");
+    const allowWordBreaking = formData.get("allow-word-breaking");
 
     setTimeLimit(Number(timeLimit));
     setRoundLimit(Number(roundLimit));
+    setIsWordBreakingAllowed(!!allowWordBreaking);
 
     navigate(`/game/${mode}`);
   };
@@ -44,6 +47,14 @@ export default function Setup() {
               id="round-limit"
               type="number"
               defaultValue={5}
+            />
+            <label className="text-center underline" htmlFor="round-limit">
+              Allow word breaking ?
+            </label>
+            <input
+              name="allow-word-breaking"
+              id="allow-word-breaking"
+              type="checkbox"
             />
 
             <Button className="bg-ui-tertiary mt-2">START</Button>

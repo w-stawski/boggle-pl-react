@@ -13,6 +13,8 @@ export interface Word {
 export interface GameContextType {
   timeLimit: number;
   roundLimit: number;
+  isWordBreakingAllowed: boolean;
+  setIsWordBreakingAllowed: Dispatch<SetStateAction<boolean>>;
   setTimeLimit: Dispatch<SetStateAction<number>>;
   setRoundLimit: Dispatch<SetStateAction<number>>;
 }

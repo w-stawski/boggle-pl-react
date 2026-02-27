@@ -57,9 +57,17 @@ export const getLetterArrWithNewLetter = (
 export const checkIfLetterValid = (
   letter: Letter,
   selectedLetters: Letter[],
+  isSelected: boolean,
+  isWordBreakingAllowed: boolean,
 ): boolean => {
   if (!selectedLetters.length) {
     return true;
+  }
+
+  if (isSelected) {
+    return isWordBreakingAllowed
+      ? true
+      : selectedLetters[selectedLetters.length - 1].id === letter.id;
   }
   const { row: currentlySelectedRow, column: currentlySelectedColumn } =
     letter.position;
@@ -72,16 +80,4 @@ export const checkIfLetterValid = (
   );
 
   return rowDistance <= 1 && columnDistance <= 1;
-};
-
-export const checkIfLetterArrValid = (letters: Letter[]) => {
-  const hasError = letters.some((letter: Letter) => {
-    const arrWithoutCheckedLetter = letters.filter(
-      (filterLetter: Letter) => filterLetter.id !== letter.id,
-    );
-
-    return checkIfLetterValid(letter, arrWithoutCheckedLetter);
-  });
-
-  return hasError;
 };

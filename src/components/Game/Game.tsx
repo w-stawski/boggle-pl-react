@@ -9,7 +9,6 @@ import Wordslist from "../Wordslist/Wordslist.js";
 
 import { SettingsContext } from "../../contexts/SettingsContext.js";
 import {
-  checkIfLetterArrValid,
   checkIfLetterValid,
   getDiceRandomValues,
   getLetterArrWithNewLetter,
@@ -24,7 +23,8 @@ function Game() {
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [showModal, setShowModal] = useState<boolean | null>(null);
-  const { timeLimit, roundLimit } = useContext(SettingsContext);
+  const { timeLimit, roundLimit, isWordBreakingAllowed } =
+    useContext(SettingsContext);
 
   const { seconds, startTimer } = useTimer(() => {
     setShowModal(true);
@@ -37,7 +37,7 @@ function Game() {
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
   const handleSelectedLettersUpdate = useCallback(
-    (selectedLetter: Letter): void => {
+    (selectedLetter: Letter, isSelected?: boolean): void => {
       setInvalidLetterId("");
 
       if (!selectedLetter) {
@@ -45,7 +45,14 @@ function Game() {
         return;
       }
 
-      if (!checkIfLetterValid(selectedLetter, selectedLetters)) {
+      if (
+        !checkIfLetterValid(
+          selectedLetter,
+          selectedLetters,
+          isSelected,
+          isWordBreakingAllowed,
+        )
+      ) {
         setInvalidLetterId(selectedLetter.id);
         return;
       }
@@ -54,7 +61,7 @@ function Game() {
         getLetterArrWithNewLetter(selectedLetter, lettersArr),
       );
     },
-    [selectedLetters],
+    [selectedLetters, isWordBreakingAllowed],
   );
 
   const onDiceRoll = useCallback(
@@ -73,10 +80,6 @@ function Game() {
   );
 
   const onWordAccept = useCallback((): void => {
-    const areLettersConnected = checkIfLetterArrValid(selectedLetters);
-    if (!areLettersConnected) {
-      alert("Letters were not connected!");
-    }
     setWords((words) => {
       const isWordDuplicate = words.some(
         (previousWord: Word) => previousWord.val === word,
@@ -84,12 +87,10 @@ function Game() {
       if (isWordDuplicate) {
         alert("Word duplicated!");
       }
-      return isWordDuplicate || !areLettersConnected
-        ? words
-        : [...words, { val: word, points: null }];
+      return isWordDuplicate ? words : [...words, { val: word, points: null }];
     });
     handleSelectedLettersUpdate(null);
-  }, [handleSelectedLettersUpdate, word, selectedLetters]);
+  }, [handleSelectedLettersUpdate, word]);
 
   const setupNextRound = (): void => {
     setShowModal(false);
