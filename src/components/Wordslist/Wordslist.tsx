@@ -22,39 +22,10 @@ export default memo(function Wordslist({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [words]);
 
-  const template = !isLoading ? (
+  const template = isLoading ? (
     <p>checking...</p>
   ) : (
-    [
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-      { val: "elloo", points: 124 },
-    ].map((word: Word) => {
+    words.map((word: Word) => {
       const { val, points } = word;
       return points === 0 ? (
         <li className="line-through" key={word.val}>
