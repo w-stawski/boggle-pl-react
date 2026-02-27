@@ -129,6 +129,14 @@ export const diceLetters: Letter[][] = [
     { val: "U", id: "d15-s4", position: null },
     { val: "W", id: "d15-s5", position: null },
   ],
-];
+] as const;
 
-export const diceWordIndexPattern = [0, 1, 5, 6, 10, 14, 15];
+export const diceWordIndexPattern = [0, 1, 5, 6, 10, 14, 15] as const;
+
+export const GameMode = {
+  single: "single",
+  hotseat: "hotseat",
+  online: "online",
+} as const;
+
+export type GameMode = (typeof GameMode)[keyof typeof GameMode];

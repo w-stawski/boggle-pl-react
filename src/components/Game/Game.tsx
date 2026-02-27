@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
 import { useTimer } from "../../hooks/useTimer.js";
@@ -7,6 +7,7 @@ import Diceboard from "../Diceboard/Diceboard.js";
 import Modal from "../Modal/Modal.js";
 import Wordslist from "../Wordslist/Wordslist.js";
 
+import { SettingsContext } from "../../contexts/SettingsContext.js";
 import {
   checkIfLetterArrValid,
   checkIfLetterValid,
@@ -22,8 +23,8 @@ function Game() {
   const [round, setRound] = useState(1);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
-
   const [showModal, setShowModal] = useState<boolean | null>(null);
+  const { timeLimit, roundLimit } = useContext(SettingsContext);
 
   const { seconds, startTimer } = useTimer(() => {
     setShowModal(true);
@@ -66,9 +67,9 @@ function Game() {
       }
 
       handleSelectedLettersUpdate(null);
-      startTimer(90);
+      startTimer(timeLimit);
     },
-    [startTimer, handleSelectedLettersUpdate],
+    [startTimer, handleSelectedLettersUpdate, timeLimit],
   );
 
   const onWordAccept = useCallback((): void => {
@@ -95,7 +96,12 @@ function Game() {
     setSelectedLetters([]);
     setWords([]);
     resetCheckedWords();
-    setRound((count) => ++count);
+    const nextRound = round + 1;
+
+    if (nextRound > 1 && nextRound >= roundLimit) {
+      alert("limit");
+    }
+    setRound(nextRound);
   };
 
   return (
@@ -105,7 +111,7 @@ function Game() {
           <Wordslist words={words} />
         </div>
         <div className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
-          {/*  TODO user set round limit time limit, intro , footer , users, lang, localstorage, 2 players, rules */}
+          {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage? */}
           <section className="flex justify-between text-ui-secondary opacity-95">
             <p>Round: {round}</p>
             <p
@@ -115,8 +121,8 @@ function Game() {
             </p>
           </section>
           <Button
-            isDisabled={!!seconds}
-            highlighted
+            className="bg-ui-tertiary"
+            disabled={!!seconds}
             onClickFn={() => onDiceRoll(15)}
           >
             roll the dice
@@ -124,14 +130,14 @@ function Game() {
           <Wordbox
             word={word}
             onOkClickFn={onWordAccept}
-            isDisabled={selectedLetters.length < 3}
+            disabled={selectedLetters.length < 3}
           />
           <Diceboard
             letters={diceValues}
             onLetterSelect={handleSelectedLettersUpdate}
             selectedLettersIds={selectedLetters.map((letter) => letter.id)}
             invalidLetterId={invalidLetterId}
-            isDisabled={!seconds}
+            disabled={!seconds}
           />
         </div>
       </div>

@@ -7,13 +7,13 @@ interface DiceboardProps {
   letters: Letter[];
   invalidLetterId: string;
   selectedLettersIds: string[];
-  isDisabled?: boolean;
+  disabled?: boolean;
   onLetterSelect: (letter: Letter) => void;
 }
 
 export default memo(function Diceboard({
   invalidLetterId,
-  isDisabled,
+  disabled,
   letters,
   onLetterSelect,
   selectedLettersIds,
@@ -23,7 +23,7 @@ export default memo(function Diceboard({
 
   return (
     <div
-      className={`grid grid-cols-4 gap-2 aspect-square transition-opacity duration-300 ${isDisabled ? "opacity-50  pointer-events-none" : ""}`}
+      className={`grid grid-cols-4 gap-2 aspect-square transition-opacity duration-300 ${disabled ? "opacity-50  pointer-events-none" : ""}`}
     >
       {letters.map((letter, index) => (
         <Dice

@@ -4,10 +4,10 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Layout from "./Layout";
-import Start from "./components/Start/Start";
 import Game from "./components/Game/Game";
+import Setup from "./components/Setup/Setup";
+import Start from "./components/Start/Start";
 
-// 1. Define your routes in a constant
 const router = createBrowserRouter([
   {
     path: "/",
@@ -16,16 +16,30 @@ const router = createBrowserRouter([
       {
         index: true,
         //change to start
-        loader: () => redirect("game"),
+        loader: () => redirect("start"),
       },
       {
         path: "start",
         element: <Start />,
       },
       {
-        path: "game",
-        element: <Game />,
+        path: "/setup/:mode",
+        element: <Setup />,
       },
+      {
+        path: "game",
+        children: [
+          {
+            index: true,
+            loader: () => redirect("/start"),
+          },
+          {
+            path: "single",
+            element: <Game />,
+          },
+        ],
+      },
+      { path: "*", loader: () => redirect("/start") },
     ],
   },
 ]);
