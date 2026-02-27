@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 import type { Word } from "../../utils/types";
 
 interface WordslistProps {
@@ -16,10 +16,45 @@ export default memo(function Wordslist({
     ? words.reduce((acc, word) => acc + word.points, 0)
     : null;
 
-  const template = isLoading ? (
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [words]);
+
+  const template = !isLoading ? (
     <p>checking...</p>
   ) : (
-    words.map((word: Word) => {
+    [
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+      { val: "elloo", points: 124 },
+    ].map((word: Word) => {
       const { val, points } = word;
       return points === 0 ? (
         <li className="line-through" key={word.val}>
@@ -33,9 +68,12 @@ export default memo(function Wordslist({
     })
   );
   return (
-    <div className="flex flex-col items-center justify-center h-full text-3xl">
+    <div className="flex flex-col items-center justify-center h-full text-3xl select-none">
       {isFinalBoard && <h1 className="underline">Results</h1>}
-      <ul className="text-center max-h-3/4 overflow-hidden my-3">{template}</ul>
+      <ul className="text-center max-h-3/4 overflow-y-auto my-3">
+        {template}
+        <div ref={bottomRef}></div>
+      </ul>
 
       {isFinalBoard && (
         <p className="underline text-ui-accent">Total: {total}</p>
