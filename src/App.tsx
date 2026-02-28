@@ -37,6 +37,10 @@ const router = createBrowserRouter([
             path: "single",
             element: <Game />,
           },
+          {
+            path: "hotseat",
+            element: <Game />,
+          },
         ],
       },
       { path: "*", loader: () => redirect("/start") },

@@ -5,12 +5,14 @@ interface WordslistProps {
   words: Word[];
   isFinalBoard?: boolean;
   isLoading?: boolean;
+  bottomText?: string;
 }
 
 export default memo(function Wordslist({
   words,
   isFinalBoard,
   isLoading,
+  bottomText,
 }: WordslistProps) {
   const total = isFinalBoard
     ? words.reduce((acc, word) => acc + word.points, 0)
@@ -49,6 +51,7 @@ export default memo(function Wordslist({
       {isFinalBoard && (
         <p className="underline text-ui-accent">Total: {total}</p>
       )}
+      {bottomText && <h1 className="mt-5">{bottomText}</h1>}
     </div>
   );
 });

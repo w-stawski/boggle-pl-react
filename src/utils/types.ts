@@ -1,5 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
-
 export interface Letter {
   val: string;
   id: string;
@@ -8,13 +6,4 @@ export interface Letter {
 export interface Word {
   val: string;
   points: number;
-}
-
-export interface GameContextType {
-  timeLimit: number;
-  roundLimit: number;
-  isWordBreakingAllowed: boolean;
-  setIsWordBreakingAllowed: Dispatch<SetStateAction<boolean>>;
-  setTimeLimit: Dispatch<SetStateAction<number>>;
-  setRoundLimit: Dispatch<SetStateAction<number>>;
 }

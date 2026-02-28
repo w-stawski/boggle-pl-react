@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
 import { useTimer } from "../../hooks/useTimer.js";
@@ -22,8 +22,10 @@ function Game() {
   const [round, setRound] = useState(1);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
-  const [showModal, setShowModal] = useState<boolean | null>(null);
-  const { timeLimit, roundLimit, isWordBreakingAllowed } =
+  const [showModal, setShowModal] = useState<boolean>(null);
+  const [nextPlayer, setNextPlayer] = useState<number>(2);
+
+  const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
     useContext(SettingsContext);
 
   const { seconds, startTimer } = useTimer(() => {
@@ -35,7 +37,14 @@ function Game() {
   const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
     useDictionaryCheck();
 
+  useEffect(() => {
+    setNextPlayer((player: number) =>
+      player === numberOfPlayers ? 1 : player + 1,
+    );
+  }, [numberOfPlayers]);
+
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
+
   const handleSelectedLettersUpdate = useCallback(
     (selectedLetter: Letter, isSelected?: boolean): void => {
       setInvalidLetterId("");
@@ -97,6 +106,14 @@ function Game() {
     setSelectedLetters([]);
     setWords([]);
     resetCheckedWords();
+
+    if (numberOfPlayers > 1) {
+      if (nextPlayer === numberOfPlayers) {
+        setNextPlayer(1);
+      }
+      setNextPlayer((currentPlayer) => currentPlayer + 1);
+      return;
+    }
     const nextRound = round + 1;
 
     if (nextRound > 1 && nextRound >= roundLimit) {
@@ -148,6 +165,9 @@ function Game() {
           <Wordslist
             words={checkedWords}
             isLoading={areResultsLoading}
+            bottomText={
+              numberOfPlayers > 1 ? `Next Player: ${nextPlayer + 1}` : ""
+            }
             isFinalBoard
           />
         </Modal>

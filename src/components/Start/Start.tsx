@@ -8,13 +8,8 @@ export default function Start() {
       <Link className="w-full" to={`/setup/${GameMode.single}`}>
         <Button className="bg-ui-tertiary w-full">Single Player</Button>
       </Link>
-      <Link
-        className="pointer-events-none w-full"
-        to={`/setup/${GameMode.hotseat}`}
-      >
-        <Button disabled className="bg-ui-tertiary w-full">
-          Multiplayer - Hotseat
-        </Button>
+      <Link className="w-full" to={`/setup/${GameMode.hotseat}`}>
+        <Button className="bg-ui-tertiary w-full">Multiplayer - Hotseat</Button>
       </Link>
       <Link
         className="pointer-events-none w-full"
