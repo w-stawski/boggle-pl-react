@@ -23,7 +23,7 @@ function Game() {
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [showModal, setShowModal] = useState<boolean>(null);
-  const [nextPlayer, setNextPlayer] = useState<number>(2);
+  const [currentPlayer, setCurrentPlayer] = useState<number>(null);
 
   const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
     useContext(SettingsContext);
@@ -38,9 +38,9 @@ function Game() {
     useDictionaryCheck();
 
   useEffect(() => {
-    setNextPlayer((player: number) =>
-      player === numberOfPlayers ? 1 : player + 1,
-    );
+    if (numberOfPlayers > 1) {
+      setCurrentPlayer(1);
+    }
   }, [numberOfPlayers]);
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
@@ -108,19 +108,28 @@ function Game() {
     resetCheckedWords();
 
     if (numberOfPlayers > 1) {
-      if (nextPlayer === numberOfPlayers) {
-        setNextPlayer(1);
+      if (currentPlayer === numberOfPlayers) {
+        setCurrentPlayer(1);
+      } else {
+        setCurrentPlayer((currentPlayer) => currentPlayer + 1);
+        startTimer(timeLimit);
+        return;
       }
-      setNextPlayer((currentPlayer) => currentPlayer + 1);
-      return;
     }
     const nextRound = round + 1;
 
     if (nextRound > 1 && nextRound >= roundLimit) {
       alert("limit");
     }
+
     setRound(nextRound);
   };
+
+  const nextPlayer = !currentPlayer
+    ? null
+    : currentPlayer === numberOfPlayers
+      ? 1
+      : currentPlayer + 1;
 
   return (
     <>
@@ -130,10 +139,16 @@ function Game() {
         </div>
         <div className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
           {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage? */}
-          <section className="flex justify-between text-ui-secondary opacity-95">
-            <p>Round: {round}</p>
+          <section className="flex justify-between items-center opacity-95">
+            <div>
+              <p className="text-ui-secondary ">Round : {round}</p>
+              {currentPlayer && (
+                <p className="text-sm">PLAYER : {currentPlayer}</p>
+              )}
+            </div>
+
             <p
-              className={`transition-color duration-200 ${!seconds ? "invisible" : ""} ${seconds < 10 ? "text-ui-accent" : ""}`}
+              className={`text-ui-secondary  transition-color duration-200 ${!seconds ? "invisible" : ""} ${seconds < 10 ? "text-ui-accent" : ""}`}
             >
               Seconds Remaining: {seconds}
             </p>
@@ -161,13 +176,15 @@ function Game() {
       </div>
 
       {showModal && (
-        <Modal onCloseFn={setupNextRound}>
+        <Modal
+          onCloseFn={setupNextRound}
+          closeButtonAltText={`Start next turn for Player ${nextPlayer}`}
+        >
           <Wordslist
             words={checkedWords}
             isLoading={areResultsLoading}
-            bottomText={
-              numberOfPlayers > 1 ? `Next Player: ${nextPlayer + 1}` : ""
-            }
+            blackoutWords
+            bottomText={nextPlayer ? `Next Player: ${nextPlayer}` : ""}
             isFinalBoard
           />
         </Modal>

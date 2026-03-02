@@ -6,6 +6,7 @@ interface WordslistProps {
   isFinalBoard?: boolean;
   isLoading?: boolean;
   bottomText?: string;
+  blackoutWords?: boolean;
 }
 
 export default memo(function Wordslist({
@@ -13,6 +14,7 @@ export default memo(function Wordslist({
   isFinalBoard,
   isLoading,
   bottomText,
+  blackoutWords,
 }: WordslistProps) {
   const total = isFinalBoard
     ? words.reduce((acc, word) => acc + word.points, 0)
@@ -34,8 +36,9 @@ export default memo(function Wordslist({
           {val}
         </li>
       ) : (
-        <li key={word.val}>
-          {val} {points}
+        <li className="flex mb-1" key={word.val}>
+          <p className={`mr-2 ${blackoutWords ? "bg-black" : ""}`}> {val}</p>{" "}
+          <p> {points}</p>
         </li>
       );
     })

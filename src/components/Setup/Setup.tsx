@@ -75,6 +75,7 @@ export default function Setup() {
                   name="player-count"
                   id="player-count"
                   type="number"
+                  min={2}
                   defaultValue={2}
                 />
               </>
