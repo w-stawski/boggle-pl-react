@@ -19,11 +19,11 @@ import Wordbox from "../Wordbox/Wordbox.js";
 function Game() {
   const [diceValues, setDiceValues] = useState<Letter[]>(getDiceRandomValues());
   const [invalidLetterId, setInvalidLetterId] = useState<string>("");
-  const [round, setRound] = useState(1);
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
-  const [showModal, setShowModal] = useState<boolean>(null);
+  const [round, setRound] = useState(1);
   const [currentPlayer, setCurrentPlayer] = useState<number>(null);
+  const [showModal, setShowModal] = useState<boolean>(null);
 
   const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
     useContext(SettingsContext);

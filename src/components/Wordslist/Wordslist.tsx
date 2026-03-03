@@ -32,7 +32,10 @@ export default memo(function Wordslist({
     words.map((word: Word) => {
       const { val, points } = word;
       return points === 0 ? (
-        <li className="line-through" key={word.val}>
+        <li
+          className={blackoutWords ? "bg-ui-error" : "line-through"}
+          key={word.val}
+        >
           {val}
         </li>
       ) : (

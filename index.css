@@ -34,6 +34,7 @@
   --color-ui-secondary: var(--color-paper-white);
   --color-ui-accent: var(--color-dark-orchid);
   --color-ui-tertiary: var(--color-amber-300);
+  --color-ui-error: var(--color-clay-red);
   --color-ui-text: black;
   --color-ui-main-background: var(--color-chocolate);
   --color-ui-secondary-background: var(--color-paper-white);
