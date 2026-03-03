@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
 import { useTimer } from "../../hooks/useTimer.js";
@@ -8,40 +8,35 @@ import Modal from "../Modal/Modal.js";
 import Wordslist from "../Wordslist/Wordslist.js";
 
 import { SettingsContext } from "../../contexts/SettingsContext.js";
+import { useDice } from "../../hooks/useDice.js";
 import {
   checkIfLetterValid,
-  getDiceRandomValues,
   getLetterArrWithNewLetter,
 } from "../../utils/helpers.js";
 import type { Letter, Word } from "../../utils/types.js";
 import Wordbox from "../Wordbox/Wordbox.js";
 
 function Game() {
-  const [diceValues, setDiceValues] = useState<Letter[]>(getDiceRandomValues());
   const [invalidLetterId, setInvalidLetterId] = useState<string>("");
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [round, setRound] = useState(1);
-  const [currentPlayer, setCurrentPlayer] = useState<number>(null);
+  const [currentPlayer, setCurrentPlayer] = useState<number | null>(() => {
+    return numberOfPlayers > 1 ? 1 : null;
+  });
   const [showModal, setShowModal] = useState<boolean>(null);
 
   const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
     useContext(SettingsContext);
+
+  const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
+    useDictionaryCheck();
 
   const { seconds, startTimer } = useTimer(() => {
     setShowModal(true);
     setSelectedLetters([]);
     checkWords(words);
   });
-
-  const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
-    useDictionaryCheck();
-
-  useEffect(() => {
-    if (numberOfPlayers > 1) {
-      setCurrentPlayer(1);
-    }
-  }, [numberOfPlayers]);
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
@@ -73,21 +68,10 @@ function Game() {
     [selectedLetters, isWordBreakingAllowed],
   );
 
-  const onDiceRoll = useCallback(
-    (repeat: number): void => {
-      setDiceValues(getDiceRandomValues());
-
-      if (repeat) {
-        setTimeout(() => onDiceRoll(--repeat), 50);
-        return;
-      }
-
-      handleSelectedLettersUpdate(null);
-      startTimer(timeLimit);
-    },
-    [startTimer, handleSelectedLettersUpdate, timeLimit],
-  );
-
+  const { diceValues, rollDice } = useDice(() => {
+    handleSelectedLettersUpdate(null);
+    startTimer(timeLimit);
+  });
   const onWordAccept = useCallback((): void => {
     setWords((words) => {
       const isWordDuplicate = words.some(
@@ -100,7 +84,7 @@ function Game() {
     });
     handleSelectedLettersUpdate(null);
   }, [handleSelectedLettersUpdate, word]);
-
+  // reducer?
   const setupNextRound = (): void => {
     setShowModal(false);
     setSelectedLetters([]);
@@ -156,7 +140,7 @@ function Game() {
           <Button
             className="bg-ui-tertiary"
             disabled={!!seconds}
-            onClickFn={() => onDiceRoll(15)}
+            onClickFn={() => rollDice(15)}
           >
             roll the dice
           </Button>
