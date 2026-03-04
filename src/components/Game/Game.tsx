@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
 import { useTimer } from "../../hooks/useTimer.js";
@@ -21,13 +21,8 @@ function Game() {
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [round, setRound] = useState(1);
-  const [currentPlayer, setCurrentPlayer] = useState<number | null>(() => {
-    return numberOfPlayers > 1 ? 1 : null;
-  });
+  const [currentPlayer, setCurrentPlayer] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(null);
-
-  const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
-    useContext(SettingsContext);
 
   const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
     useDictionaryCheck();
@@ -37,6 +32,19 @@ function Game() {
     setSelectedLetters([]);
     checkWords(words);
   });
+
+  const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
+    useContext(SettingsContext);
+
+  useEffect(() => {
+    setCurrentPlayer((prev) => (numberOfPlayers > 1 ? (prev ?? 1) : null));
+  }, [numberOfPlayers]);
+
+  const nextPlayer = !currentPlayer
+    ? null
+    : currentPlayer === numberOfPlayers
+      ? 1
+      : currentPlayer + 1;
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
@@ -109,12 +117,6 @@ function Game() {
     setRound(nextRound);
   };
 
-  const nextPlayer = !currentPlayer
-    ? null
-    : currentPlayer === numberOfPlayers
-      ? 1
-      : currentPlayer + 1;
-
   return (
     <>
       <div className="grid grid-cols-4 justify-items-center">
@@ -122,7 +124,7 @@ function Game() {
           <Wordslist words={words} />
         </div>
         <div className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
-          {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage? */}
+          {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage?, error boundry */}
           <section className="flex justify-between items-center opacity-95">
             <div>
               <p className="text-ui-secondary ">Round : {round}</p>
