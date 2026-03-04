@@ -25,6 +25,7 @@ export default function Setup() {
     setTimeLimit(Number(timeLimit));
     setRoundLimit(Number(roundLimit));
     setIsWordBreakingAllowed(!!allowWordBreaking);
+    debugger;
     setNumberOfPlayers(Number(numberOfPlayers));
 
     navigate(`/game/${mode}`);

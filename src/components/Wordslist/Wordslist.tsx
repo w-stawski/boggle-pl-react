@@ -21,7 +21,6 @@ export default memo(function Wordslist({
     : null;
 
   const bottomRef = useRef(null);
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [words]);

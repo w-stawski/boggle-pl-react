@@ -163,12 +163,14 @@ function Game() {
       {showModal && (
         <Modal
           onCloseFn={setupNextRound}
-          closeButtonAltText={`Start next turn for Player ${nextPlayer}`}
+          closeButtonAltText={
+            nextPlayer ? `Start next turn for Player ${nextPlayer}` : ""
+          }
         >
           <Wordslist
             words={checkedWords}
             isLoading={areResultsLoading}
-            blackoutWords
+            blackoutWords={!!nextPlayer}
             bottomText={nextPlayer ? `Next Player: ${nextPlayer}` : ""}
             isFinalBoard
           />
