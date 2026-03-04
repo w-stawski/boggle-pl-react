@@ -14,8 +14,9 @@ import type { Letter, Word } from "../../utils/types.js";
 import Button from "../Button/Button.js";
 import Diceboard from "../Diceboard/Diceboard.js";
 import Modal from "../Modal/Modal.js";
-import Wordbox from "../Wordbox/Wordbox.js";
+import SelectedLetters from "../SelectedLetters/SelectedLetters.js";
 import Wordslist from "../Wordslist/Wordslist.js";
+import GameInfo from "../GameInfo/GameInfo.js";
 
 function Game() {
   const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
@@ -92,7 +93,7 @@ function Game() {
     handleSelectedLettersUpdate(null);
   }, [handleSelectedLettersUpdate, word]);
   // reducer?
-  const setupNextRound = (): void => {
+  const setupNextTurn = (): void => {
     setShowModal(false);
     setSelectedLetters([]);
     setWords([]);
@@ -118,26 +119,17 @@ function Game() {
 
   return (
     <>
-      <div className="grid grid-cols-4 justify-items-center">
-        <div className="hidden md:block max-h-[50dvh] my-auto overflow-hidden">
+      <main className="grid grid-cols-4 justify-items-center">
+        <aside className="hidden md:block max-h-[50dvh] my-auto overflow-hidden">
           <Wordslist words={words} />
-        </div>
-        <div className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
+        </aside>
+        <article className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
           {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage?, error boundry */}
-          <section className="flex justify-between items-center opacity-95">
-            <div>
-              <p className="text-ui-secondary ">Round : {round}</p>
-              {currentPlayer && (
-                <p className="text-sm">PLAYER : {currentPlayer}</p>
-              )}
-            </div>
-
-            <p
-              className={`text-ui-secondary  transition-color duration-200 ${!seconds ? "invisible" : ""} ${seconds < 10 ? "text-ui-accent" : ""}`}
-            >
-              Seconds Remaining: {seconds}
-            </p>
-          </section>
+          <GameInfo
+            currentPlayer={currentPlayer}
+            round={round}
+            seconds={seconds}
+          />
           <Button
             className="bg-ui-tertiary"
             disabled={!!seconds}
@@ -145,7 +137,7 @@ function Game() {
           >
             roll the dice
           </Button>
-          <Wordbox
+          <SelectedLetters
             word={word}
             onOkClickFn={onWordAccept}
             disabled={selectedLetters.length < 3}
@@ -157,12 +149,12 @@ function Game() {
             invalidLetterId={invalidLetterId}
             disabled={!seconds}
           />
-        </div>
-      </div>
+        </article>
+      </main>
 
       {showModal && (
         <Modal
-          onCloseFn={setupNextRound}
+          onCloseFn={setupNextTurn}
           closeButtonAltText={
             nextPlayer ? `Start next turn for Player ${nextPlayer}` : ""
           }

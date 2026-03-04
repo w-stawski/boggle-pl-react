@@ -16,7 +16,6 @@ export default function Dice({
     : "bg-ui-primary";
   const isInvalidClass = wasInvalid ? "animate-shake" : "";
   return (
-    // change to button ?
     <button
       onClick={onLetterSelect}
       className={`flex justify-center items-center rounded-xl

@@ -35,10 +35,10 @@ export default memo(function Diceboard({
   });
 
   return (
-    <div
+    <section
       className={`grid grid-cols-4 gap-2 aspect-square transition-opacity duration-300 ${disabled ? "opacity-50  pointer-events-none" : ""}`}
     >
       {template}
-    </div>
+    </section>
   );
 });
