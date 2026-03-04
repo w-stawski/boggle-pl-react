@@ -1,27 +1,33 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-
-import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
-import { useTimer } from "../../hooks/useTimer.js";
-import Button from "../Button/Button.js";
-import Diceboard from "../Diceboard/Diceboard.js";
-import Modal from "../Modal/Modal.js";
-import Wordslist from "../Wordslist/Wordslist.js";
+import { useCallback, useContext, useState } from "react";
 
 import { SettingsContext } from "../../contexts/SettingsContext.js";
 import { useDice } from "../../hooks/useDice.js";
+import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
+import { useTimer } from "../../hooks/useTimer.js";
+
 import {
   checkIfLetterValid,
   getLetterArrWithNewLetter,
 } from "../../utils/helpers.js";
 import type { Letter, Word } from "../../utils/types.js";
+
+import Button from "../Button/Button.js";
+import Diceboard from "../Diceboard/Diceboard.js";
+import Modal from "../Modal/Modal.js";
 import Wordbox from "../Wordbox/Wordbox.js";
+import Wordslist from "../Wordslist/Wordslist.js";
 
 function Game() {
+  const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
+    useContext(SettingsContext);
+
+  const [currentPlayer, setCurrentPlayer] = useState<number | null>(
+    numberOfPlayers > 1 ? 1 : null,
+  );
   const [invalidLetterId, setInvalidLetterId] = useState<string>("");
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [round, setRound] = useState(1);
-  const [currentPlayer, setCurrentPlayer] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(null);
 
   const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
@@ -32,13 +38,6 @@ function Game() {
     setSelectedLetters([]);
     checkWords(words);
   });
-
-  const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
-    useContext(SettingsContext);
-
-  useEffect(() => {
-    setCurrentPlayer((prev) => (numberOfPlayers > 1 ? (prev ?? 1) : null));
-  }, [numberOfPlayers]);
 
   const nextPlayer = !currentPlayer
     ? null
