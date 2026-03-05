@@ -1,9 +1,9 @@
-interface DiceProps {
+type DiceProps = {
   value: string;
   isSelected: boolean;
   wasInvalid: boolean;
   onLetterSelect: () => void;
-}
+};
 
 export default function Dice({
   isSelected,

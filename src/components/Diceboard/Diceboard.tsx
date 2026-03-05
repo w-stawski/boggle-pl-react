@@ -3,13 +3,13 @@ import Dice from "../Dice/Dice";
 import type { Letter } from "../../utils/types";
 import { memo } from "react";
 
-interface DiceboardProps {
+type DiceboardProps = {
   letters: Letter[];
   invalidLetterId: string;
   selectedLettersIds: string[];
   disabled?: boolean;
   onLetterSelect: (letter: Letter, isSelected: boolean) => void;
-}
+};
 
 export default memo(function Diceboard({
   invalidLetterId,

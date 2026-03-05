@@ -1,11 +1,11 @@
 import { memo } from "react";
 import Button from "../Button/Button";
 
-interface SelectedLettersProps {
+type SelectedLettersProps = {
   word: string;
   onOkClickFn: () => void;
   disabled: boolean;
-}
+};
 
 export default memo(function SelectedLetters({
   word,

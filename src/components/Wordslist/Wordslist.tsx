@@ -1,13 +1,13 @@
 import { memo, useEffect, useRef } from "react";
 import type { Word } from "../../utils/types";
 
-interface WordslistProps {
+type WordslistProps = {
   words: Word[];
   isFinalBoard?: boolean;
   isLoading?: boolean;
   bottomText?: string;
   blackoutWords?: boolean;
-}
+};
 
 export default memo(function Wordslist({
   words,

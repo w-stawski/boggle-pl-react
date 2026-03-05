@@ -1,10 +1,10 @@
 import { memo, type PropsWithChildren } from "react";
 
-interface ButtonProps {
+type ButtonProps = {
   onClickFn?: () => void;
   className?: string;
   disabled?: boolean;
-}
+};
 
 export default memo(function Button({
   children,
