@@ -8,9 +8,9 @@ export default function Modal({
 }: PropsWithChildren<{ onCloseFn: () => void; closeButtonAltText?: string }>) {
   const modalRoot = document.getElementById("modal");
   return createPortal(
-    <div className="fixed w-full h-full z-1 bg-ui-tertiary opacity-95">
+    <div className="fixed flex flex-col w-full h-full z-1 bg-ui-tertiary mb-10 opacity-95">
       <button
-        className="absolute right-0 p-7 text-3xl cursor-pointer hover:text-ui-accent transition-colors duration-300"
+        className="p-5 ml-auto text-3xl cursor-pointer hover:text-ui-accent transition-colors duration-300"
         onClick={onCloseFn}
       >
         {closeButtonAltText ? "" : "Next Round X"}

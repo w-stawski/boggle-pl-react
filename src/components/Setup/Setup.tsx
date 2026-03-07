@@ -33,7 +33,7 @@ export default function Setup() {
     <div className="flex justify-center items-center">
       <form
         action={onSubmit}
-        className="flex flex-col pt-20 px-5 w-xl gap-5 text-3xl"
+        className="flex flex-col pt-20 px-5 w-xl gap-5 text-3xl text-paper-white"
       >
         {isLocal && (
           <>
@@ -80,7 +80,7 @@ export default function Setup() {
                 />
               </>
             )}
-            <Button className="bg-ui-tertiary mt-2">START</Button>
+            <Button className="bg-ui-tertiary mt-2 text-black">START</Button>
           </>
         )}
       </form>

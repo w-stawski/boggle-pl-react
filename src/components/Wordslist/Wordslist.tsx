@@ -46,9 +46,9 @@ export default memo(function Wordslist({
     })
   );
   return (
-    <div className="flex flex-col items-center justify-center h-full text-3xl select-none">
+    <div className="flex flex-col items-center h-full text-3xl select-none">
       {isFinalBoard && <h1 className="underline">Results</h1>}
-      <ul className="text-center max-h-3/4 overflow-y-auto my-3">
+      <ul className="text-center max-h-3/4 overflow-y-auto my-3 pr-7">
         {template}
         <div ref={bottomRef}></div>
       </ul>
