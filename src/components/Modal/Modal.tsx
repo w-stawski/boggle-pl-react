@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 export default function Modal({
   onCloseFn,
   children,
-  closeButtonAltText: closeButtonText,
+  closeButtonAltText,
 }: PropsWithChildren<{ onCloseFn: () => void; closeButtonAltText?: string }>) {
   const modalRoot = document.getElementById("modal");
   return createPortal(
@@ -13,7 +13,7 @@ export default function Modal({
         className="absolute right-0 p-7 text-3xl cursor-pointer hover:text-ui-accent transition-colors duration-300"
         onClick={onCloseFn}
       >
-        {closeButtonText ?? "X"}
+        {closeButtonAltText ? "" : "Next Round X"}
       </button>
       {children}
     </div>,
