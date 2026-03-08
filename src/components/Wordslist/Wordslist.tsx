@@ -38,7 +38,7 @@ export default memo(function Wordslist({
           {val}
         </li>
       ) : (
-        <li className="flex mb-1" key={word.val}>
+        <li className="mb-1 flex" key={word.val}>
           <p className={`mr-2 ${blackoutWords ? "bg-black" : ""}`}> {val}</p>{" "}
           <p> {points}</p>
         </li>
@@ -46,15 +46,15 @@ export default memo(function Wordslist({
     })
   );
   return (
-    <div className="flex flex-col items-center h-full text-3xl select-none">
+    <div className="flex h-full flex-col items-center text-3xl select-none">
       {isFinalBoard && <h1 className="underline">Results</h1>}
-      <ul className="text-center max-h-3/4 overflow-y-auto my-3 pr-7">
+      <ul className="my-3 max-h-3/4 overflow-y-auto pr-7 text-center">
         {template}
         <div ref={bottomRef}></div>
       </ul>
 
       {isFinalBoard && (
-        <p className="underline text-ui-accent">Total: {total}</p>
+        <p className="text-ui-accent underline">Total: {total}</p>
       )}
       {bottomText && <h1 className="mt-5">{bottomText}</h1>}
     </div>

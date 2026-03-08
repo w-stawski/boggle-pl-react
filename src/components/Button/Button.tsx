@@ -15,10 +15,7 @@ export default memo(function Button({
   return (
     <button
       disabled={disabled}
-      className={`rounded-sm shadow-dice p-3
-        transition-colors duration-200 hover:bg-ui-accent
-        cursor-pointer
-        disabled:opacity-50 disabled:pointer-events-none ${className}`}
+      className={`shadow-dice hover:bg-ui-accent cursor-pointer rounded-sm p-3 transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50 ${className}`}
       onClick={onClickFn}
     >
       {children}

@@ -30,10 +30,10 @@ export default function Setup() {
     navigate(`/game/${mode}`);
   };
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex items-center justify-center">
       <form
         action={onSubmit}
-        className="flex flex-col pt-20 px-5 w-xl gap-5 text-3xl text-paper-white"
+        className="text-paper-white flex w-xl flex-col gap-5 px-5 pt-20 text-3xl"
       >
         {isLocal && (
           <>

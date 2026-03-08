@@ -36,7 +36,7 @@ export default memo(function Diceboard({
 
   return (
     <section
-      className={`grid grid-cols-4 gap-2 aspect-square transition-opacity duration-300 ${disabled ? "opacity-50  pointer-events-none" : ""}`}
+      className={`grid aspect-square grid-cols-4 gap-2 transition-opacity duration-300 ${disabled ? "pointer-events-none opacity-50" : ""}`}
     >
       {template}
     </section>

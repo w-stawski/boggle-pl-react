@@ -3,9 +3,9 @@ import { SettingsContextProvider } from "./contexts/SettingsContextProvider";
 
 export default function Layout() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <header>
-        <div className="flex items-center h-12 pl-10 bg-ui-secondary-background text-2xl">
+        <div className="bg-ui-secondary-background flex h-12 items-center pl-10 text-2xl">
           <Link to="/start">
             <p className="font-ornate text-3xl">PLoggle</p>
           </Link>
@@ -17,7 +17,7 @@ export default function Layout() {
         </SettingsContextProvider>
       </main>
 
-      <footer className="bg-ui-secondary-background px-5 py-1 opacity-80 text-sm">
+      <footer className="bg-ui-secondary-background px-5 py-1 text-sm opacity-80">
         <div className="flex justify-between">
           <p>PLoggle 2026</p>
           <a href="https://github.com/w-stawski" target="_blank">

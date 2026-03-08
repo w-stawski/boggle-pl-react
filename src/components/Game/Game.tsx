@@ -120,10 +120,10 @@ function Game() {
   return (
     <>
       <main className="grid grid-cols-4 justify-items-center">
-        <aside className="hidden md:block max-h-[50dvh] my-auto overflow-hidden">
+        <aside className="my-auto hidden max-h-[50dvh] overflow-hidden md:block">
           <Wordslist words={words} />
         </aside>
-        <article className="col-span-4 md:col-span-2 flex flex-col justify-center w-full max-w-120 gap-5 p-3 text-xl sm:text-2xl md:text-3xl text-ui-text">
+        <article className="text-ui-text col-span-4 flex w-full max-w-120 flex-col justify-center gap-5 p-3 text-xl sm:text-2xl md:col-span-2 md:text-3xl">
           {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage?, error boundry */}
           <GameInfo
             currentPlayer={currentPlayer}

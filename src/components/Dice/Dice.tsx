@@ -18,8 +18,7 @@ export default function Dice({
   return (
     <button
       onClick={onLetterSelect}
-      className={`flex justify-center items-center rounded-xl
-        shadow-dice aspect-square text-6xl duration-200 ${isSelectedClass} ${isInvalidClass}`}
+      className={`shadow-dice flex aspect-square items-center justify-center rounded-xl text-6xl duration-200 ${isSelectedClass} ${isInvalidClass}`}
     >
       {value}
     </button>

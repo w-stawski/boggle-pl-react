@@ -13,9 +13,9 @@ export default memo(function SelectedLetters({
   disabled,
 }: SelectedLettersProps) {
   return (
-    <section className="bg-ui-secondary px-4 py-2 rounded-sm shadow-dice">
+    <section className="bg-ui-secondary shadow-dice rounded-sm px-4 py-2">
       <div className="flex justify-between">
-        <span className=" flex items-center text-2xl  sm:text-3xl md:text-4xl">
+        <span className="flex items-center text-2xl sm:text-3xl md:text-4xl">
           {word ? word : "..."}
         </span>
         <Button

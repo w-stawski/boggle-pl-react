@@ -4,7 +4,7 @@ import { GameMode } from "../../utils/constants";
 
 export default function Start() {
   return (
-    <nav className="flex flex-col items-center gap-5 pt-20 px-5">
+    <nav className="flex flex-col items-center gap-5 px-5 pt-20">
       <Link className="w-full" to={`/setup/${GameMode.single}`}>
         <Button className="bg-ui-tertiary w-full">Single Player</Button>
       </Link>
