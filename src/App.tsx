@@ -7,6 +7,7 @@ import Layout from "./Layout";
 import Game from "./components/Game/Game";
 import Setup from "./components/Setup/Setup";
 import Start from "./components/Start/Start";
+import { Analytics } from "@vercel/analytics/react";
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,12 @@ const router = createBrowserRouter([
 
 // 2. Pass the router to the Provider
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Analytics />
+    </>
+  );
 }
 
 export default App;
