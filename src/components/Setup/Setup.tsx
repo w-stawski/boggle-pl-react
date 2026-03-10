@@ -129,10 +129,7 @@ export default function Setup() {
               </div>
 
               {/* Start Button - Ensure type="submit" */}
-              <Button
-                type="submit"
-                className="mt-2 flex h-16 w-full items-center justify-center border-4 border-black bg-[#00FF66] text-2xl font-black text-black uppercase shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:bg-white sm:h-20 sm:text-3xl"
-              >
+              <Button className="mt-2 flex h-16 w-full items-center justify-center border-4 border-black bg-[#00FF66] text-2xl font-black text-black uppercase shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:bg-white sm:h-20 sm:text-3xl">
                 Ready? Start!
               </Button>
             </div>
