@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SettingsContext } from "../../contexts/SettingsContext";
 import { GameMode } from "../../utils/constants";
 import Button from "../Button/Button";
-import { Settings2, Timer, Repeat, Hash, CheckSquare } from "lucide-react";
+import { Settings2, Timer, Repeat, Hash } from "lucide-react";
 
 export default function Setup() {
   const { mode } = useParams<{ mode: GameMode }>();
