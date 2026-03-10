@@ -17,6 +17,7 @@ import Modal from "../Modal/Modal.js";
 import SelectedLetters from "../SelectedLetters/SelectedLetters.js";
 import Wordslist from "../Wordslist/Wordslist.js";
 import GameInfo from "../GameInfo/GameInfo.js";
+import { Dices } from "lucide-react";
 
 function Game() {
   const { timeLimit, roundLimit, isWordBreakingAllowed, numberOfPlayers } =
@@ -29,7 +30,7 @@ function Game() {
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [round, setRound] = useState(1);
-  const [showModal, setShowModal] = useState<boolean>(null);
+  const [showModal, setShowModal] = useState<boolean | null>(null);
 
   const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
     useDictionaryCheck();
@@ -49,7 +50,7 @@ function Game() {
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
   const handleSelectedLettersUpdate = useCallback(
-    (selectedLetter: Letter, isSelected?: boolean): void => {
+    (selectedLetter: Letter | null, isSelected?: boolean): void => {
       setInvalidLetterId("");
 
       if (!selectedLetter) {
@@ -80,19 +81,22 @@ function Game() {
     handleSelectedLettersUpdate(null);
     startTimer(timeLimit);
   });
+
   const onWordAccept = useCallback((): void => {
-    setWords((words) => {
-      const isWordDuplicate = words.some(
+    setWords((prevWords) => {
+      const isWordDuplicate = prevWords.some(
         (previousWord: Word) => previousWord.val === word,
       );
       if (isWordDuplicate) {
         alert("Word duplicated!");
       }
-      return isWordDuplicate ? words : [...words, { val: word, points: null }];
+      return isWordDuplicate
+        ? prevWords
+        : [...prevWords, { val: word, points: null }];
     });
     handleSelectedLettersUpdate(null);
   }, [handleSelectedLettersUpdate, word]);
-  // reducer?
+
   const setupNextTurn = (): void => {
     setShowModal(false);
     setSelectedLetters([]);
@@ -103,15 +107,16 @@ function Game() {
       if (currentPlayer === numberOfPlayers) {
         setCurrentPlayer(1);
       } else {
-        setCurrentPlayer((currentPlayer) => currentPlayer + 1);
+        setCurrentPlayer((prev) => (prev !== null ? prev + 1 : 1));
         startTimer(timeLimit);
         return;
       }
     }
     const nextRound = round + 1;
 
-    if (nextRound > 1 && nextRound >= roundLimit) {
-      alert("limit");
+    if (nextRound > 1 && nextRound > roundLimit) {
+      alert("Game Over!");
+      return;
     }
 
     setRound(nextRound);
@@ -119,37 +124,58 @@ function Game() {
 
   return (
     <>
-      <main className="grid grid-cols-4 justify-items-center">
-        <aside className="my-auto hidden max-h-[50dvh] overflow-hidden md:block">
-          <Wordslist words={words} />
+      <main className="mx-auto grid h-[calc(100vh-64px)] w-full max-w-7xl grid-cols-1 gap-6 p-4 md:grid-cols-4">
+        {/* SIDEBAR: Wordslist - Now visible with fixed container */}
+        <aside className="hidden h-full flex-col md:flex">
+          <div className="flex flex-col gap-2 border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+            <h2 className="mb-2 border-b-2 border-black pb-1 text-xs font-black tracking-widest uppercase">
+              Words ({words.length})
+            </h2>
+            <div className="max-h-[60vh] overflow-y-auto">
+              <Wordslist words={words} />
+            </div>
+          </div>
         </aside>
-        <article className="text-ui-text col-span-4 flex w-full max-w-120 flex-col justify-center gap-5 p-3 text-xl sm:text-2xl md:col-span-2 md:text-3xl">
-          {/*  TODO check height, hotseat, multi, intro, users, lang, localstorage?, error boundry */}
-          <GameInfo
-            currentPlayer={currentPlayer}
-            round={round}
-            seconds={seconds}
-          />
-          <Button
-            className="bg-ui-tertiary"
-            disabled={!!seconds}
-            onClickFn={() => rollDice(15)}
-          >
-            roll the dice
-          </Button>
-          <SelectedLetters
-            word={word}
-            onOkClickFn={onWordAccept}
-            disabled={selectedLetters.length < 3}
-          />
-          <Diceboard
-            letters={diceValues}
-            onLetterSelect={handleSelectedLettersUpdate}
-            selectedLettersIds={selectedLetters.map((letter) => letter.id)}
-            invalidLetterId={invalidLetterId}
-            disabled={!seconds}
-          />
+
+        {/* CENTER: Primary Game Area */}
+        <article className="col-span-1 flex w-full flex-col items-center justify-center gap-4 md:col-span-2">
+          <div className="flex w-full max-w-lg flex-col gap-3">
+            <GameInfo
+              currentPlayer={currentPlayer}
+              round={round}
+              seconds={seconds}
+            />
+
+            <Button
+              className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_rgba(0,0,0,1)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50 disabled:grayscale"
+              disabled={!!seconds}
+              onClickFn={() => rollDice(15)}
+            >
+              <Dices
+                size={28}
+                className="transition-transform group-hover:rotate-12"
+              />
+              roll the dice
+            </Button>
+
+            <SelectedLetters
+              word={word}
+              onOkClickFn={onWordAccept}
+              disabled={selectedLetters.length < 3}
+            />
+
+            <Diceboard
+              letters={diceValues}
+              onLetterSelect={handleSelectedLettersUpdate}
+              selectedLettersIds={selectedLetters.map((letter) => letter.id)}
+              invalidLetterId={invalidLetterId}
+              disabled={!seconds}
+            />
+          </div>
         </article>
+
+        {/* RIGHT SIDE: Empty for balance or future stats */}
+        <aside className="hidden md:block" />
       </main>
 
       {showModal && (

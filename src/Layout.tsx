@@ -108,15 +108,14 @@ export default function Layout() {
       </div>
 
       {/* HEADER */}
-      <header className="sticky top-0 z-50 w-full border-b-4 border-black bg-white px-6 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between">
+      <header className="sticky top-0 z-50 w-full border-b-3 border-black bg-white px-6 shadow-[0_4px_0_0_rgba(0,0,0,1)]">
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between">
           <Link
             to="/start"
             className="group transition-transform active:scale-95"
           >
-            {/* LOGO BOX: Black Primary with Yellow Offset Frame */}
             <div className="relative rotate-[-1deg] border-2 border-black bg-black px-4 py-1.5 shadow-[5px_5px_0_0_#FFDE00]">
-              <p className="text-3xl font-black tracking-tighter uppercase italic">
+              <p className="text-l font-black tracking-tighter uppercase italic">
                 <span className="text-white">PL</span>
                 <span className="text-[#FFDE00]">OGGLE</span>
               </p>
@@ -136,26 +135,6 @@ export default function Layout() {
           <Outlet />
         </SettingsContextProvider>
       </main>
-
-      {/* FOOTER */}
-      <footer className="relative z-10 border-t-4 border-black bg-white px-6 py-3 font-black text-black uppercase">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-[10px] sm:flex-row sm:text-xs">
-          <p>© 2026 PLoggle by w-stawski</p>
-          <div className="flex gap-4">
-            <p className="animate-pulse bg-black px-2 text-white italic">
-              System: Active
-            </p>
-            <a
-              href="https://github.com/w-stawski"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 hover:underline"
-            >
-              <Github size={12} /> GitHub
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
