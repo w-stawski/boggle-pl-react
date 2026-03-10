@@ -1,5 +1,3 @@
-import { Check } from "lucide-react";
-
 type DiceProps = {
   value: string;
   isSelected: boolean;

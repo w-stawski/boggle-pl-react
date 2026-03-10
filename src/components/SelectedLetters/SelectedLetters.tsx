@@ -1,6 +1,5 @@
 import { memo } from "react";
 import Button from "../Button/Button";
-import { CheckCircle } from "lucide-react";
 
 export default memo(function SelectedLetters({
   word,

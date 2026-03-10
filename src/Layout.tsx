@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { SettingsContextProvider } from "./contexts/SettingsContextProvider";
-import { Github, Coins } from "lucide-react";
+import { Coins } from "lucide-react";
 
 // --- SHADER SOURCE ---
 const vertexShaderSource = `#version 300 es
