@@ -81,3 +81,9 @@ export const checkIfLetterValid = (
 
   return rowDistance <= 1 && columnDistance <= 1;
 };
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
