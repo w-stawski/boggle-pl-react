@@ -1,34 +1,68 @@
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
+/**
+ * Modern React Modal implementation using the native <dialog> element.
+ * Handles focus trapping, escape key closing, and accessibility out-of-the-box.
+ */
 export default function Modal({
   onCloseFn,
   children,
   closeButtonAltText,
-}: PropsWithChildren<{ onCloseFn: () => void; closeButtonAltText?: string }>) {
+  title = "Round Results",
+}: PropsWithChildren<{ 
+  onCloseFn: () => void; 
+  closeButtonAltText?: string;
+  title?: string;
+}>) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const modalRoot = document.getElementById("modal");
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    // Open as modal to enable backdrop and focus trapping
+    dialog.showModal();
+
+    // Prevent scrolling of the body when modal is open
+    document.body.style.overflow = "hidden";
+
+    // Handle the 'cancel' event (Escape key) to ensure our state stays in sync
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      onCloseFn();
+    };
+
+    dialog.addEventListener("cancel", handleCancel);
+
+    return () => {
+      dialog.removeEventListener("cancel", handleCancel);
+      document.body.style.overflow = "";
+      dialog.close();
+    };
+  }, [onCloseFn]);
 
   if (!modalRoot) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onCloseFn}
-      />
-
-      {/* Modal Content */}
-      <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col border-4 border-black bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+    <dialog
+      ref={dialogRef}
+      className="fixed w-screen h-screen inset-0 z-[100] flex items-center justify-center bg-transparent p-4 outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm ml-3 sm:p-6"
+      aria-labelledby="modal-title"
+    >
+      {/* Modal Content Container - Center correctly with margin auto and fixed width if needed */}
+      <div className="relative mx-auto flex max-h-[90vh] w-full max-w-xl flex-col border-4 border-black bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b-4 border-black bg-[#FFDE00] p-4">
-          <h2 className="text-xl font-black text-black uppercase">
-            Round Results
+          <h2 id="modal-title" className="text-xl font-black text-black uppercase">
+            {title}
           </h2>
           <button
             className="group flex items-center justify-center border-2 border-black bg-white p-1 transition-transform active:scale-90"
             onClick={onCloseFn}
+            aria-label="Close modal"
           >
             <X size={24} strokeWidth={3} />
           </button>
@@ -47,7 +81,7 @@ export default function Modal({
           </button>
         </div>
       </div>
-    </div>,
+    </dialog>,
     modalRoot,
   );
 }

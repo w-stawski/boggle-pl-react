@@ -34,10 +34,10 @@ test("correctly identifies selected and invalid dice", () => {
     />,
   );
 
-  const diceA = screen.getByRole("button", { name: "A" });
-  const diceB = screen.getByRole("button", { name: "B" });
+  const diceA = screen.getByRole("button", { name: /Letter A/i });
+  const diceB = screen.getByRole("button", { name: /Letter B/i });
 
-  expect(diceA).toHaveClass("bg-ui-accent");
+  expect(diceA).toHaveClass("bg-[#00FF66]");
   expect(diceB).toHaveClass("animate-shake");
 });
 
@@ -52,7 +52,7 @@ test("calls onLetterSelect with correct data when a dice is clicked", () => {
     />,
   );
 
-  const diceC = screen.getByRole("button", { name: "C" });
+  const diceC = screen.getByRole("button", { name: /Letter C/i });
   fireEvent.click(diceC);
 
   expect(onSelectSpy).toHaveBeenCalledWith(mockLetters[2], false);

@@ -39,7 +39,7 @@ export default function Setup() {
     <div className="relative flex h-[calc(100vh-64px)] w-full flex-col items-center justify-center overflow-y-auto bg-[#FFDE00] p-4 font-mono sm:p-6">
       <div className="absolute inset-0 z-0 [background-image:linear-gradient(#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [background-size:20px_20px] opacity-10" />
 
-      <main className="z-10 flex w-full max-w-lg flex-col items-center">
+      <div className="z-10 flex w-full max-w-lg flex-col items-center">
         {/* Header Label */}
         <div className="mb-6 inline-block rotate-[1deg] border-4 border-black bg-white px-4 py-1.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:mb-8 sm:px-6 sm:py-2 sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
           <h1 className="flex items-center gap-2 text-xl font-black text-black uppercase sm:text-2xl">
@@ -139,7 +139,7 @@ export default function Setup() {
         <p className="mt-4 text-center text-[10px] font-black tracking-widest text-black uppercase sm:mt-6 sm:text-xs">
           Confirm settings to initialize game sequence
         </p>
-      </main>
+      </div>
     </div>
   );
 }

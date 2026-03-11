@@ -131,8 +131,6 @@ export const diceLetters: Letter[][] = [
   ],
 ] as const;
 
-export const diceWordIndexPattern = [0, 1, 5, 6, 10, 14, 15] as const;
-
 export const GameMode = {
   single: "single",
   hotseat: "hotseat",

@@ -11,7 +11,7 @@ export default function Start() {
       <div className="absolute inset-0 z-0 [background-image:linear-gradient(#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [background-size:20px_20px] opacity-10" />
 
       {/* Main Container with flex-shrink to prevent pushing off-screen */}
-      <main className="z-10 flex w-full max-w-md flex-col items-center justify-center">
+      <div className="z-10 flex w-full max-w-md flex-col items-center justify-center">
         {/* Playful Floating Title - Reduced margins for better fit */}
         <div className="mb-8 text-center sm:mb-12">
           <div className="inline-block rotate-[-2deg] border-4 border-black bg-black px-6 py-3 shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]">
@@ -76,7 +76,7 @@ export default function Start() {
             How to Play?
           </a>
         </nav>
-      </main>
+      </div>
     </div>
   );
 }

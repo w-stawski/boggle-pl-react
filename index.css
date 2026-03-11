@@ -44,6 +44,16 @@
     inset 5px 0 rgba(255, 255, 255, 0.2), inset -5px 0 rgba(255, 255, 255, 0.2);
 
   --animate-shake: shake 0.2s step-end;
+  --animate-pulse-bg: pulse-bg 0.5s infinite alternate;
+}
+
+@keyframes pulse-bg {
+  from {
+    background-color: #ef4444;
+  }
+  to {
+    background-color: #ffffff;
+  }
 }
 
 body {

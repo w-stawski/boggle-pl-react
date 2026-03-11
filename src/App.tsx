@@ -8,11 +8,16 @@ import Game from "./components/Game/Game";
 import Setup from "./components/Setup/Setup";
 import Start from "./components/Start/Start";
 import { Analytics } from "@vercel/analytics/react";
+import { SettingsContextProvider } from "./contexts/SettingsContextProvider";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <SettingsContextProvider>
+        <Layout />
+      </SettingsContextProvider>
+    ),
     children: [
       {
         index: true,

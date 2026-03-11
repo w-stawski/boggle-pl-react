@@ -5,6 +5,7 @@ export function SettingsContextProvider({ children }: { children: ReactNode }) {
   const [numberOfPlayers, setNumberOfPlayers] = useState<number>(1);
   const [timeLimit, setTimeLimit] = useState<number>(90);
   const [roundLimit, setRoundLimit] = useState<number>(5);
+  const [currentRound, setCurrentRound] = useState<number>(1);
   const [isWordBreakingAllowed, setIsWordBreakingAllowed] =
     useState<boolean>(false);
 
@@ -13,12 +14,14 @@ export function SettingsContextProvider({ children }: { children: ReactNode }) {
       value={{
         timeLimit,
         roundLimit,
+        currentRound,
         isWordBreakingAllowed,
         numberOfPlayers,
         setRoundLimit,
         setTimeLimit,
         setIsWordBreakingAllowed,
         setNumberOfPlayers,
+        setCurrentRound,
       }}
     >
       {children}

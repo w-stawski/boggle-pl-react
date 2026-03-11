@@ -30,26 +30,12 @@ export default function GameInfo({
 
       {/* Right Side: Timer */}
       <div
-        className={`flex items-center justify-center gap-2 border-2 border-black px-3 py-2 shadow-[3px_3px_0_0_rgba(0,0,0,1)] transition-all duration-200 ${!seconds ? "bg-zinc-200 text-zinc-500 opacity-50" : "text-black"} ${isUrgent ? "bg-red-500 ring-4 ring-red-500/20 ring-inset" : "bg-white"} `}
-        style={
-          isUrgent ? { animation: "pulse-bg 0.5s infinite alternate" } : {}
-        }
+        className={`flex items-center justify-center gap-2 border-2 border-black px-3 py-2 shadow-[3px_3px_0_0_rgba(0,0,0,1)] transition-all duration-200 ${!seconds ? "bg-zinc-200 text-zinc-500 opacity-50" : "text-black"} ${isUrgent ? "animate-pulse-bg ring-4 ring-red-500/20 ring-inset" : "bg-white"} `}
       >
         <Timer size={14} strokeWidth={3} className="mb-1 shrink-0" />
         <span className="text-xs tabular-nums sm:text-sm">
           {seconds > 0 ? `${seconds} s` : "00 s"}
         </span>
-
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-          @keyframes pulse-bg {
-            from { background-color: #ef4444; }
-            to { background-color: #ffffff; }
-          }
-        `,
-          }}
-        />
       </div>
     </header>
   );

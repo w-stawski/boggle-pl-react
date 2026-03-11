@@ -35,24 +35,24 @@ test("Selected should change color from primary to accent", async () => {
   const { rerender } = render(
     <Dice
       onLetterSelect={vi.fn()}
-      value=""
+      value="A"
       isSelected={false}
       wasInvalid={false}
     />,
   );
   const button = screen.getByRole("button");
-  expect(button).not.toHaveClass("bg-ui-accent");
+  expect(button).not.toHaveClass("bg-[#00FF66]");
 
   rerender(
     <Dice
       onLetterSelect={vi.fn()}
-      value=""
+      value="A"
       isSelected={true}
       wasInvalid={false}
     />,
   );
 
-  expect(button).toHaveClass("bg-ui-accent");
+  expect(button).toHaveClass("bg-[#00FF66]");
 });
 
 test("Method passed with onLetterSelect props should be called on button click", async () => {
