@@ -8,7 +8,7 @@ import type { Word } from "../utils/types";
 export const useDictionaryCheck = (): {
   checkedWords: Word[];
   areResultsLoading: boolean;
-  checkWords: (words: Word[]) => Promise<void>;
+  checkWords: (words: Word[]) => Promise<Word[] | undefined>;
   resetCheckedWords: () => void;
 } => {
   const [checkedWords, setCheckedWords] = useState<Word[]>([]);
@@ -49,11 +49,12 @@ export const useDictionaryCheck = (): {
       );
 
       if (!resp.ok) throw new Error("Network response was not ok");
-      const parsedResp = await resp.json();
+      const parsedResp: Word[] = await resp.json();
 
       // Only update state if the component is still mounted and this is the latest request.
       if (isMounted.current && currentRequest === requestCount.current) {
         setCheckedWords(parsedResp);
+        return parsedResp;
       }
     } catch (error) {
       console.error("word check failed", error);
@@ -63,6 +64,7 @@ export const useDictionaryCheck = (): {
         setIsLoading(false);
       }
     }
+    return undefined;
   }, []);
 
   const resetCheckedWords = useCallback(() => {

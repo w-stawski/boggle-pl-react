@@ -37,6 +37,9 @@ function Game() {
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [round, setRound] = useState(1);
+  const [turnHistory, setTurnHistory] = useState<
+    { player: number | null; round: number; score: number; words: Word[] }[]
+  >([]);
 
   // Sync internal round state with context for Layout display
   useEffect(() => {
@@ -44,16 +47,11 @@ function Game() {
   }, [round, setCurrentRound]);
 
   const [showModal, setShowModal] = useState<boolean | null>(null);
+  const [modalView, setModalView] = useState<
+    "turn" | "roundComparison" | "gameSummary"
+  >("turn");
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
-
-  // Clear duplicate error after a short delay
-  useEffect(() => {
-    if (duplicateError) {
-      const timer = setTimeout(() => setDuplicateError(null), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [duplicateError]);
 
   const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
     useDictionaryCheck();
@@ -62,11 +60,27 @@ function Game() {
    * Callback for when the timer reaches zero.
    * Wrapped in useCallback to ensure stability and avoid unnecessary hook re-runs.
    */
-  const handleTimerUp = useCallback(() => {
+  const handleTimerUp = useCallback(async () => {
     setShowModal(true);
     setSelectedLetters([]);
-    checkWords(words);
-  }, [words, checkWords]);
+    const results = await checkWords(words);
+
+    if (results) {
+      const turnScore = results.reduce(
+        (acc: number, w: Word) => acc + (w.points || 0),
+        0,
+      );
+      setTurnHistory((prev) => [
+        ...prev,
+        {
+          player: currentPlayer,
+          round,
+          score: turnScore,
+          words: results,
+        },
+      ]);
+    }
+  }, [words, checkWords, currentPlayer, round]);
 
   const { seconds, startTimer } = useTimer(handleTimerUp);
 
@@ -149,12 +163,38 @@ function Game() {
    * Manages round increments and multiplayer turn switching.
    */
   const setupNextTurn = useCallback((): void => {
-    if (isGameOver) {
-      navigate("/start");
-      return;
+    // If we're on a turn result view and there are other views to show (comparison or summary)
+    if (showModal) {
+      if (modalView === "turn") {
+        if (numberOfPlayers > 1) {
+          // In hotseat, show comparison after last player of round
+          if (currentPlayer === numberOfPlayers) {
+            setModalView("roundComparison");
+            return;
+          }
+        } else if (round === roundLimit) {
+          // Single player: go straight to game summary if it's the last round
+          setModalView("gameSummary");
+          setIsGameOver(true);
+          return;
+        }
+      } else if (modalView === "roundComparison") {
+        // After round comparison, either go to next round or game summary
+        if (round === roundLimit) {
+          setModalView("gameSummary");
+          setIsGameOver(true);
+          return;
+        }
+      } else if (modalView === "gameSummary") {
+        // Game is finally over, go back to start
+        navigate("/start");
+        return;
+      }
     }
 
+    // Reset for next turn/round
     setShowModal(false);
+    setModalView("turn");
     setSelectedLetters([]);
     setWords([]);
     resetCheckedWords();
@@ -173,15 +213,11 @@ function Game() {
     // Round progression logic.
     const nextRound = round + 1;
 
-    if (nextRound > 1 && nextRound > roundLimit) {
-      // End of game state trigger.
-      setIsGameOver(true);
-      setShowModal(true); // Keep modal open for final results
-      return;
-    }
-
+    // We only reach here if we've handled comparisons/summaries or they aren't needed yet
     setRound(nextRound);
   }, [
+    showModal,
+    modalView,
     currentPlayer,
     numberOfPlayers,
     round,
@@ -189,7 +225,6 @@ function Game() {
     timeLimit,
     resetCheckedWords,
     startTimer,
-    isGameOver,
     navigate,
   ]);
 
@@ -261,71 +296,205 @@ function Game() {
       {showModal && (
         <Modal
           onCloseFn={setupNextTurn}
-          title={isGameOver ? "Game Over !" : "Round Results"}
+          title={
+            modalView === "turn"
+              ? isGameOver
+                ? "Final Turn Results"
+                : "Turn Results"
+              : modalView === "roundComparison"
+                ? `Round ${round} Comparison`
+                : "Final Results Summary"
+          }
           closeButtonAltText={
-            isGameOver
-              ? "Play Again"
-              : numberOfPlayers > 1
-                ? `Next: Player ${nextPlayer}`
-                : "Next Round"
+            modalView === "turn"
+              ? numberOfPlayers > 1
+                ? currentPlayer === numberOfPlayers
+                  ? "Compare Results"
+                  : `Next: Player ${nextPlayer}`
+                : round === roundLimit
+                  ? "Show Summary"
+                  : "Next Round"
+              : modalView === "roundComparison"
+                ? round === roundLimit
+                  ? "Final Summary"
+                  : "Next Round"
+                : "Back to Menu"
           }
         >
-          <div className="flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="border-4 border-black bg-[#FFDE00] p-4 shadow-[4px_4px_0_0_#000]">
-                <p className="text-[10px] font-black uppercase opacity-60">
-                  Round
-                </p>
-                <p className="text-3xl font-black">{round}</p>
-              </div>
-              <div className="border-4 border-black bg-[#00FF66] p-4 shadow-[4px_4px_0_0_#000]">
-                <p className="text-[10px] font-black uppercase opacity-60">
-                  Total Points
-                </p>
-                <p className="text-3xl font-black">
-                  {checkedWords.reduce((acc, w) => acc + (w.points || 0), 0)}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
-                Validated Words:
-              </h3>
-              <div className="max-h-48 overflow-y-auto rounded-sm border-2 border-black bg-zinc-50 p-3">
-                {areResultsLoading ? (
-                  <div className="flex flex-col items-center gap-3 py-4">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FF00FF] border-t-transparent" />
-                    <p className="text-xs font-black uppercase">
-                      Checking Dictionary...
-                    </p>
-                  </div>
-                ) : checkedWords.length > 0 ? (
-                  <ul className="flex flex-col gap-2">
-                    {checkedWords.map((w, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center justify-between border-b border-zinc-200 pb-1"
-                      >
-                        <span className="font-bold tracking-tight uppercase">
-                          {w.val}
-                        </span>
-                        <span
-                          className={`font-black ${w.points ? "text-green-600" : "text-red-500"}`}
-                        >
-                          {w.points ? `+${w.points}` : "0"}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="py-4 text-center text-xs font-bold text-zinc-400 uppercase italic">
-                    No valid words found this round.
+          {modalView === "turn" && (
+            <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="border-4 border-black bg-[#FFDE00] p-4 shadow-[4px_4px_0_0_#000]">
+                  <p className="text-[10px] font-black uppercase opacity-60">
+                    Round
                   </p>
-                )}
+                  <p className="text-3xl font-black">{round}</p>
+                </div>
+                <div className="border-4 border-black bg-[#00FF66] p-4 shadow-[4px_4px_0_0_#000]">
+                  <p className="text-[10px] font-black uppercase opacity-60">
+                    Turn Points
+                  </p>
+                  <p className="text-3xl font-black">
+                    {checkedWords.reduce((acc, w) => acc + (w.points || 0), 0)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
+                  Validated Words:
+                </h3>
+                <div className="max-h-48 overflow-y-auto rounded-sm border-2 border-black bg-zinc-50 p-3">
+                  {areResultsLoading ? (
+                    <div className="flex flex-col items-center gap-3 py-4">
+                      <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FF00FF] border-t-transparent" />
+                      <p className="text-xs font-black uppercase">
+                        Checking Dictionary...
+                      </p>
+                    </div>
+                  ) : checkedWords.length > 0 ? (
+                    <ul className="flex flex-col gap-2">
+                      {checkedWords.map((w, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center justify-between border-b border-zinc-200 pb-1"
+                        >
+                          <span className="font-bold tracking-tight uppercase">
+                            {w.val}
+                          </span>
+                          <span
+                            className={`font-black ${w.points ? "text-green-600" : "text-red-500"}`}
+                          >
+                            {w.points ? `+${w.points}` : "0"}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="py-4 text-center text-xs font-bold text-zinc-400 uppercase italic">
+                      No valid words found this turn.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {modalView === "roundComparison" && (
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-4">
+                {turnHistory
+                  .filter((h) => h.round === round)
+                  .map((h) => (
+                    <div
+                      key={h.player}
+                      className="flex items-center justify-between border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_#000]"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center border-2 border-black bg-[#FFDE00] font-black">
+                          P{h.player}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-black uppercase">
+                            Player {h.player}
+                          </span>
+                          <span className="text-[10px] text-zinc-500 uppercase">
+                            {
+                              h.words.filter((w) => w.points && w.points > 0)
+                                .length
+                            }{" "}
+                            Words
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-3xl font-black">+{h.score}</div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {modalView === "gameSummary" && (
+            <div className="flex flex-col gap-6">
+              {/* Leaderboard / Totals */}
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
+                  Final Leaderboard:
+                </h3>
+                <div className="flex flex-col gap-3">
+                  {Array.from({ length: numberOfPlayers }, (_, i) => i + 1)
+                    .map((p) => ({
+                      player: p,
+                      total: turnHistory
+                        .filter((h) => h.player === p)
+                        .reduce((acc, h) => acc + h.score, 0),
+                    }))
+                    .sort((a, b) => b.total - a.total)
+                    .map((result, idx) => (
+                      <div
+                        key={result.player}
+                        className={`flex items-center justify-between border-4 border-black p-4 shadow-[4px_4px_0_0_#000] ${idx === 0 ? "bg-[#00FF66]" : "bg-white"}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-black">
+                            {idx === 0 ? "🏆" : `${idx + 1}.`}
+                          </span>
+                          <span className="font-black uppercase">
+                            Player {result.player}
+                          </span>
+                        </div>
+                        <span className="text-3xl font-black">
+                          {result.total} pts
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              {/* Round by Round Breakdown */}
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-black tracking-widest uppercase">
+                  History:
+                </h3>
+                <div className="max-h-48 overflow-y-auto border-2 border-black bg-zinc-50 p-2 font-mono text-xs">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="border-b-2 border-black">
+                        <th className="py-1">Rnd</th>
+                        {Array.from(
+                          { length: numberOfPlayers },
+                          (_, i) => i + 1,
+                        ).map((p) => (
+                          <th key={p} className="py-1">
+                            P{p}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.from({ length: roundLimit }, (_, i) => i + 1).map(
+                        (r) => (
+                          <tr key={r} className="border-b border-zinc-200">
+                            <td className="py-1 font-black">{r}</td>
+                            {Array.from(
+                              { length: numberOfPlayers },
+                              (_, i) => i + 1,
+                            ).map((p) => (
+                              <td key={p} className="py-1">
+                                {turnHistory.find(
+                                  (h) => h.player === p && h.round === r,
+                                )?.score || 0}
+                              </td>
+                            ))}
+                          </tr>
+                        ),
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
         </Modal>
       )}
     </>
