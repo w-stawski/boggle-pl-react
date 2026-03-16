@@ -1,22 +1,35 @@
-import { memo, type PropsWithChildren } from "react";
+import { memo, type ReactNode } from "react";
+import { cn } from "../../utils/cn";
 
 type ButtonProps = {
-  onClickFn?: () => void;
+  onClick?: () => void;
+  onClickFn?: () => void; // Keeping for backward compatibility
   className?: string;
   disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  children?: ReactNode;
+  "aria-label"?: string;
 };
 
 export default memo(function Button({
   children,
   disabled,
+  onClick,
   onClickFn,
   className,
-}: PropsWithChildren<ButtonProps>) {
+  type = "button",
+  "aria-label": ariaLabel,
+}: ButtonProps) {
   return (
     <button
+      type={type}
       disabled={disabled}
-      className={`shadow-dice hover:bg-ui-accent cursor-pointer rounded-sm p-3 transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50 ${className}`}
-      onClick={onClickFn}
+      aria-label={ariaLabel}
+      className={cn(
+        "cursor-pointer transition-all disabled:pointer-events-none disabled:opacity-50",
+        className,
+      )}
+      onClick={onClick || onClickFn}
     >
       {children}
     </button>

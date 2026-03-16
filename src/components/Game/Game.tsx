@@ -18,7 +18,7 @@ import Modal from "../Modal/Modal.js";
 import SelectedLetters from "../SelectedLetters/SelectedLetters.js";
 import Wordslist from "../Wordslist/Wordslist.js";
 import GameInfo from "../GameInfo/GameInfo.js";
-import { Dices, AlertCircle } from "lucide-react";
+import { Dices, Ban } from "lucide-react";
 
 function Game() {
   const navigate = useNavigate();
@@ -195,10 +195,10 @@ function Game() {
 
   return (
     <>
-      <div className="mx-auto grid h-[calc(100vh-64px)] w-full max-w-7xl grid-cols-1 gap-6 p-4 md:grid-cols-4">
-        {/* SIDEBAR: Wordslist - Now visible with fixed container */}
+      <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 gap-6 p-4 md:grid-cols-4">
+        {/* SIDEBAR: Wordslist */}
         <aside className="hidden h-full flex-col md:flex">
-          <div className="flex flex-col gap-2 border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+          <div className="flex flex-col gap-2 border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_#000]">
             <h2 className="mb-2 border-b-2 border-black pb-1 text-xs font-black tracking-widest uppercase">
               Words ({words.length})
             </h2>
@@ -218,7 +218,7 @@ function Game() {
             />
 
             <Button
-              className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_rgba(0,0,0,1)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50 disabled:grayscale"
+              className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_#000] transition-all hover:translate-1 hover:shadow-none disabled:opacity-50 disabled:grayscale"
               disabled={!!seconds}
               onClickFn={() => rollDice(15)}
               aria-label="Roll the dice to start the game"
@@ -247,54 +247,85 @@ function Game() {
 
           {/* DUPLICATE WORD ERROR INDICATOR */}
           {duplicateError && (
-            <div className="animate-shake flex w-full max-w-lg items-center gap-3 border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_rgba(239,68,68,1)]">
-              <AlertCircle className="text-red-500" size={24} />
-              <p className="font-black text-red-500 uppercase">
+            <div className="animate-shake absolute flex max-w-full items-center gap-3 border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#ef4444]">
+              <Ban className="text-red-500" />
+              <p className="text-l font-black text-red-500 uppercase">
                 {duplicateError}
               </p>
             </div>
           )}
         </div>
-
-        {/* RIGHT SIDE: Empty for balance or future stats */}
-        <aside className="hidden md:block" />
       </div>
 
+      {/* MODAL: Round and Game Over results */}
       {showModal && (
         <Modal
           onCloseFn={setupNextTurn}
-          title={isGameOver ? "Game Results" : "Round Results"}
+          title={isGameOver ? "Game Over !" : "Round Results"}
           closeButtonAltText={
             isGameOver
-              ? "Back to Menu"
-              : nextPlayer
-                ? `Start next turn for Player ${nextPlayer}`
+              ? "Play Again"
+              : numberOfPlayers > 1
+                ? `Next: Player ${nextPlayer}`
                 : "Next Round"
           }
         >
-          {isGameOver && (
-            <div className="mb-4 border-4 border-black bg-black p-4 text-center">
-              <h1 className="text-3xl font-black text-[#00FF66] uppercase italic">
-                Game Over!
-              </h1>
-              <p className="font-bold text-white uppercase">
-                Final stats recorded.
-              </p>
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="border-4 border-black bg-[#FFDE00] p-4 shadow-[4px_4px_0_0_#000]">
+                <p className="text-[10px] font-black uppercase opacity-60">
+                  Round
+                </p>
+                <p className="text-3xl font-black">{round}</p>
+              </div>
+              <div className="border-4 border-black bg-[#00FF66] p-4 shadow-[4px_4px_0_0_#000]">
+                <p className="text-[10px] font-black uppercase opacity-60">
+                  Total Points
+                </p>
+                <p className="text-3xl font-black">
+                  {checkedWords.reduce((acc, w) => acc + (w.points || 0), 0)}
+                </p>
+              </div>
             </div>
-          )}
-          <Wordslist
-            words={checkedWords}
-            isLoading={areResultsLoading}
-            blackoutWords={!!nextPlayer && !isGameOver}
-            bottomText={
-              isGameOver
-                ? "Final Score"
-                : nextPlayer
-                  ? `Next Player: ${nextPlayer}`
-                  : ""
-            }
-            isFinalBoard
-          />
+
+            <div className="flex flex-col gap-3">
+              <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
+                Validated Words:
+              </h3>
+              <div className="max-h-48 overflow-y-auto rounded-sm border-2 border-black bg-zinc-50 p-3">
+                {areResultsLoading ? (
+                  <div className="flex flex-col items-center gap-3 py-4">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FF00FF] border-t-transparent" />
+                    <p className="text-xs font-black uppercase">
+                      Checking Dictionary...
+                    </p>
+                  </div>
+                ) : checkedWords.length > 0 ? (
+                  <ul className="flex flex-col gap-2">
+                    {checkedWords.map((w, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-center justify-between border-b border-zinc-200 pb-1"
+                      >
+                        <span className="font-bold tracking-tight uppercase">
+                          {w.val}
+                        </span>
+                        <span
+                          className={`font-black ${w.points ? "text-green-600" : "text-red-500"}`}
+                        >
+                          {w.points ? `+${w.points}` : "0"}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="py-4 text-center text-xs font-bold text-zinc-400 uppercase italic">
+                    No valid words found this round.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
         </Modal>
       )}
     </>

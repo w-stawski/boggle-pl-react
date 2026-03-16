@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SettingsContext } from "../../contexts/SettingsContext";
 import { GameMode } from "../../utils/constants";
 import Button from "../Button/Button";
-import { Settings2, Timer, Repeat, Hash, Check } from "lucide-react";
+import { Settings2, Timer, Repeat, Hash } from "lucide-react";
 
 export default function Setup() {
   const { mode } = useParams<{ mode: GameMode }>();
@@ -36,20 +36,20 @@ export default function Setup() {
   };
 
   return (
-    <div className="relative flex h-[calc(100vh-64px)] w-full flex-col items-center justify-center overflow-y-auto bg-[#FFDE00] p-4 font-mono sm:p-6">
-      <div className="absolute inset-0 z-0 [background-image:linear-gradient(#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [background-size:20px_20px] opacity-10" />
+    <div className="relative flex flex-1 w-full flex-col items-center justify-center overflow-y-auto bg-[#FFDE00] p-4 font-mono sm:p-6">
+      <div className="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] bg-size-[20px_20px]" />
 
       <div className="z-10 flex w-full max-w-lg flex-col items-center">
         {/* Header Label */}
-        <div className="mb-6 inline-block rotate-[1deg] border-4 border-black bg-white px-4 py-1.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:mb-8 sm:px-6 sm:py-2 sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-          <h1 className="flex items-center gap-2 text-xl font-black text-black uppercase sm:text-2xl">
-            <Settings2 size={24} /> {mode} Setup
+        <div className="mb-6 inline-block rotate-1 border-4 border-black bg-white px-4 py-1.5 shadow-[4px_4px_0_0_#000] sm:mb-8 sm:px-6 sm:py-2 sm:shadow-[6px_6px_0_0_#000]">
+          <h1 className="flex items-center gap-2 text-xl font-black uppercase text-black sm:text-2xl">
+            <Settings2 size={24} /> {mode} settings
           </h1>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="flex w-full flex-col gap-4 border-4 border-black bg-white p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] sm:gap-6 sm:p-8 sm:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]"
+          className="flex w-full flex-col gap-4 border-4 border-black bg-white p-5 shadow-[8px_8px_0_0_#000] sm:gap-6 sm:p-8 sm:shadow-[12px_12px_0_0_#000]"
         >
           {isLocal && (
             <div className="flex flex-col gap-4 sm:gap-6">
@@ -57,7 +57,7 @@ export default function Setup() {
                 {/* Time Limit */}
                 <div className="flex flex-col gap-1">
                   <label
-                    className="flex items-center gap-2 text-[10px] font-black text-black uppercase"
+                    className="flex items-center gap-2 text-[10px] font-black uppercase text-black"
                     htmlFor="time-limit"
                   >
                     <Timer size={14} /> Time (sec)
@@ -67,6 +67,7 @@ export default function Setup() {
                     name="time-limit"
                     id="time-limit"
                     type="number"
+                    min={5}
                     defaultValue={90}
                   />
                 </div>
@@ -74,7 +75,7 @@ export default function Setup() {
                 {/* Round Limit */}
                 <div className="flex flex-col gap-1">
                   <label
-                    className="flex items-center gap-2 text-[10px] font-black text-black uppercase"
+                    className="flex items-center gap-2 text-[10px] font-black uppercase text-black"
                     htmlFor="round-limit"
                   >
                     <Repeat size={14} /> Rounds
@@ -84,6 +85,7 @@ export default function Setup() {
                     name="round-limit"
                     id="round-limit"
                     type="number"
+                    min={1}
                     defaultValue={5}
                   />
                 </div>
@@ -93,13 +95,13 @@ export default function Setup() {
               {mode === GameMode.hotseat && (
                 <div className="flex flex-col gap-1">
                   <label
-                    className="flex items-center gap-2 text-[10px] font-black text-black uppercase"
+                    className="flex items-center gap-2 text-[10px] font-black uppercase text-black"
                     htmlFor="player-count"
                   >
                     <Hash size={14} /> Players
                   </label>
                   <input
-                    className="h-12 border-4 border-black bg-zinc-100 px-3 text-xl font-black outline-none focus:bg-cyan-400"
+                    className="h-12 border-4 border-black bg-zinc-100 px-3 text-xl font-black outline-none focus:bg-[#FFDE00]"
                     name="player-count"
                     id="player-count"
                     type="number"
@@ -109,36 +111,34 @@ export default function Setup() {
                 </div>
               )}
 
-              {/* Checkbox: Allow Word Breaking */}
-              <div className="flex items-center gap-3 border-4 border-black bg-black p-3 transition-all hover:bg-zinc-900">
-                <div className="relative flex items-center">
-                  <input
-                    className="peer h-6 w-6 cursor-pointer appearance-none border-2 border-white bg-white checked:bg-[#00FF66]"
-                    name="allow-word-breaking"
-                    id="allow-word-breaking"
-                    type="checkbox"
-                  />
-                  <Check className="pointer-events-none absolute top-0 left-0 hidden h-6 w-6 text-black peer-checked:block" />
+              {/* Word Breaking Toggle */}
+              <div className="flex items-center justify-between border-4 border-black bg-zinc-50 px-3 py-1">
+                <div className="flex flex-col">
+                  <span className="text-xs font-black uppercase text-black">
+                    Word Breaking
+                  </span>
                 </div>
-                <label
-                  className="cursor-pointer text-sm font-black text-white uppercase sm:text-base"
-                  htmlFor="allow-word-breaking"
-                >
-                  Allow word breaking?
+                <label className="relative inline-flex cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    name="allow-word-breaking"
+                    className="peer sr-only"
+                  />
+                  <div className="h-8 w-14 border-4 border-black bg-white transition-colors peer-checked:bg-[#00FF66]" />
+                  <div className="absolute left-1.5 top-1.5 h-5 w-3 border-2 border-black bg-black transition-transform peer-checked:translate-x-6" />
                 </label>
               </div>
-
-              {/* Start Button - Ensure type="submit" */}
-              <Button className="mt-2 flex h-16 w-full items-center justify-center border-4 border-black bg-[#00FF66] text-2xl font-black text-black uppercase shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:bg-white sm:h-20 sm:text-3xl">
-                Ready? Start!
-              </Button>
             </div>
           )}
-        </form>
 
-        <p className="mt-4 text-center text-[10px] font-black tracking-widest text-black uppercase sm:mt-6 sm:text-xs">
-          Confirm settings to initialize game sequence
-        </p>
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            className="flex h-14 w-full items-center justify-center gap-3 border-4 border-black bg-[#FFDE00] text-xl font-black uppercase shadow-[6px_6px_0_0_#000] transition-all hover:translate-1 hover:shadow-none active:bg-white sm:h-16 sm:text-2xl"
+          >
+            Start Game
+          </Button>
+        </form>
       </div>
     </div>
   );

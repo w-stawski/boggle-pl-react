@@ -11,8 +11,8 @@ export default function Modal({
   children,
   closeButtonAltText,
   title = "Round Results",
-}: PropsWithChildren<{ 
-  onCloseFn: () => void; 
+}: PropsWithChildren<{
+  onCloseFn: () => void;
   closeButtonAltText?: string;
   title?: string;
 }>) {
@@ -49,14 +49,17 @@ export default function Modal({
   return createPortal(
     <dialog
       ref={dialogRef}
-      className="fixed w-screen h-screen inset-0 z-[100] flex items-center justify-center bg-transparent p-4 outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm ml-3 sm:p-6"
+      className="fixed ml-3 inset-0 z-100 flex h-screen w-screen items-center justify-center bg-transparent p-4 outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm sm:p-6"
       aria-labelledby="modal-title"
     >
-      {/* Modal Content Container - Center correctly with margin auto and fixed width if needed */}
-      <div className="relative mx-auto flex max-h-[90vh] w-full max-w-xl flex-col border-4 border-black bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+      {/* Modal Content Container */}
+      <div className="relative mx-auto flex max-h-[90vh] w-full max-w-xl flex-col border-4 border-black bg-white shadow-[12px_12px_0_0_#000]">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b-4 border-black bg-[#FFDE00] p-4">
-          <h2 id="modal-title" className="text-xl font-black text-black uppercase">
+          <h2
+            id="modal-title"
+            className="text-xl font-black text-black uppercase mx-auto"
+          >
             {title}
           </h2>
           <button
@@ -75,7 +78,7 @@ export default function Modal({
         <div className="border-t-4 border-black bg-zinc-50 p-4">
           <button
             onClick={onCloseFn}
-            className="flex w-full items-center justify-center border-4 border-black bg-[#00FF66] py-3 text-xl font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:bg-white"
+            className="flex w-full items-center justify-center border-4 border-black bg-[#00FF66] py-3 text-xl font-black uppercase shadow-[4px_4px_0_0_#000] cursor-pointer transition-all hover:translate-1 hover:shadow-none active:bg-white"
           >
             {closeButtonAltText || "Next Round"}
           </button>

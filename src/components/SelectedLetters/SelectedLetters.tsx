@@ -11,13 +11,13 @@ export default memo(function SelectedLetters({
   disabled: boolean;
 }) {
   return (
-    <section className="w-full border-4 border-black bg-white px-3 py-1 shadow-[6px_6px_0_0_rgba(0,0,0,1)]">
+    <section className="w-full border-4 border-black bg-white px-3 py-1 shadow-[6px_6px_0_0_#000]">
       <div className="flex items-center justify-between gap-4">
-        <span className="truncate pr-5 text-3xl font-black tracking-tighter text-black uppercase italic">
+        <span className="truncate pr-5 text-3xl font-black uppercase italic tracking-tighter text-black">
           {word || "..."}
         </span>
         <Button
-          className={`text-l h-12 min-w-[100px] border-2 bg-[#00FF66] shadow-[4px_4px_0_0_rgba(0,0,0,1)] ${disabled ? "opacity-20" : "hover:bg-[#00e65c]"}`}
+          className={`h-12 min-w-25 border-2 bg-[#00FF66] text-sm shadow-[4px_4px_0_0_#000] ${disabled ? "opacity-20" : "hover:translate-0.5 hover:shadow-none"}`}
           onClickFn={onOkClickFn}
           disabled={disabled}
         >

@@ -3,72 +3,62 @@ import userEvent from "@testing-library/user-event";
 import { expect, test, vi } from "vitest";
 import Dice from "./Dice";
 
-test("Component renders passed value", async () => {
-  const mockValue = "X";
+test("dice should show the correct letter value", () => {
   render(
     <Dice
-      onLetterSelect={null}
-      value={mockValue}
+      value="G"
       isSelected={false}
       wasInvalid={false}
-    />,
+      onLetterSelect={vi.fn()}
+    />
   );
-  const value = screen.getByText("X");
-
-  expect(value).toBeInTheDocument();
+  
+  expect(screen.getByText("G")).toBeInTheDocument();
 });
 
-test("invalid Dice should animate when invalid", async () => {
+test("dice should call the selection handler when clicked", async () => {
+  const onSelect = vi.fn();
+  const user = userEvent.setup();
+  
   render(
     <Dice
-      onLetterSelect={vi.fn()}
-      value=""
-      isSelected={false}
-      wasInvalid={true}
-    />,
-  );
-  const button = screen.getByRole("button");
-  expect(button).toHaveClass("animate-shake");
-});
-
-test("Selected should change color from primary to accent", async () => {
-  const { rerender } = render(
-    <Dice
-      onLetterSelect={vi.fn()}
       value="A"
       isSelected={false}
       wasInvalid={false}
-    />,
+      onLetterSelect={onSelect}
+    />
   );
-  const button = screen.getByRole("button");
-  expect(button).not.toHaveClass("bg-[#00FF66]");
+  
+  await user.click(screen.getByRole("button"));
+  expect(onSelect).toHaveBeenCalledTimes(1);
+});
 
-  rerender(
+test("dice should highlight and scale when selected", () => {
+  render(
     <Dice
-      onLetterSelect={vi.fn()}
-      value="A"
+      value="B"
       isSelected={true}
       wasInvalid={false}
-    />,
+      onLetterSelect={vi.fn()}
+    />
   );
-
+  
+  const button = screen.getByRole("button");
   expect(button).toHaveClass("bg-[#00FF66]");
+  expect(screen.getByText("B")).toHaveClass("scale-110");
 });
 
-test("Method passed with onLetterSelect props should be called on button click", async () => {
-  const spyMethod = vi.fn();
-  const user = userEvent.setup();
+test("dice should shake and turn red when invalid move is made", () => {
   render(
     <Dice
-      onLetterSelect={spyMethod}
-      value=""
+      value="C"
       isSelected={false}
-      wasInvalid={false}
-    />,
+      wasInvalid={true}
+      onLetterSelect={vi.fn()}
+    />
   );
-  const button = screen.getByRole("button") as HTMLButtonElement;
-
-  await user.click(button);
-
-  expect(spyMethod).toBeCalled();
+  
+  const button = screen.getByRole("button");
+  expect(button).toHaveClass("animate-shake");
+  expect(button).toHaveClass("bg-red-500");
 });

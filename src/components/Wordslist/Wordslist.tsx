@@ -1,6 +1,14 @@
 import { memo, useEffect, useRef } from "react";
 import type { Word } from "../../utils/types";
-import { Star, Skull } from "lucide-react";
+import { Star, Skull, Loader2 } from "lucide-react";
+
+interface WordslistProps {
+  words: Word[];
+  isFinalBoard?: boolean;
+  isLoading?: boolean;
+  bottomText?: string;
+  blackoutWords?: boolean;
+}
 
 export default memo(function Wordslist({
   words,
@@ -8,9 +16,9 @@ export default memo(function Wordslist({
   isLoading,
   bottomText,
   blackoutWords,
-}: any) {
+}: WordslistProps) {
   const total = isFinalBoard
-    ? words.reduce((acc: any, word: any) => acc + (word.points || 0), 0)
+    ? words.reduce((acc, word) => acc + (word.points || 0), 0)
     : null;
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -26,11 +34,12 @@ export default memo(function Wordslist({
         </h1>
       )}
 
-      <ul className="custom-scrollbar flex-1 space-y-1 overflow-y-auto pr-1">
+      <ul className="flex-1 space-y-1 overflow-y-auto pr-1">
         {isLoading ? (
-          <p className="animate-bounce p-4 text-center font-black uppercase italic">
-            Checking...
-          </p>
+          <div className="flex flex-col items-center gap-2 p-4">
+            <Loader2 className="animate-spin" size={20} />
+            <p className="text-xs font-black uppercase italic">Checking...</p>
+          </div>
         ) : (
           words.map((word: Word) => (
             <li
@@ -43,7 +52,7 @@ export default memo(function Wordslist({
                     {word.points === 0 ? (
                       <Skull size={12} />
                     ) : (
-                      <Star size={12} className="text-cyan-500" />
+                      <Star size={12} className="text-[#FFDE00]" />
                     )}
                   </div>
                 )}
