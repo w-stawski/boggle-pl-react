@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState, useEffect } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { SettingsContext } from "../../contexts/SettingsContext.js";
@@ -12,13 +12,13 @@ import {
 } from "../../utils/helpers.js";
 import type { Letter, Word } from "../../utils/types.js";
 
+import { Ban, Dices } from "lucide-react";
 import Button from "../Button/Button.js";
 import Diceboard from "../Diceboard/Diceboard.js";
+import GameInfo from "../GameInfo/GameInfo.js";
 import Modal from "../Modal/Modal.js";
 import SelectedLetters from "../SelectedLetters/SelectedLetters.js";
 import Wordslist from "../Wordslist/Wordslist.js";
-import GameInfo from "../GameInfo/GameInfo.js";
-import { Dices, Ban } from "lucide-react";
 
 function Game() {
   const navigate = useNavigate();
@@ -41,25 +41,20 @@ function Game() {
     { player: number | null; round: number; score: number; words: Word[] }[]
   >([]);
 
-  // Sync internal round state with context for Layout display
   useEffect(() => {
     setCurrentRound(round);
   }, [round, setCurrentRound]);
 
-  const [showModal, setShowModal] = useState<boolean | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [modalView, setModalView] = useState<
     "turn" | "roundComparison" | "gameSummary"
   >("turn");
-  const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [duplicateError, setDuplicateError] = useState<string>("");
   const [isGameOver, setIsGameOver] = useState(false);
 
   const { checkedWords, checkWords, resetCheckedWords, areResultsLoading } =
     useDictionaryCheck();
 
-  /**
-   * Callback for when the timer reaches zero.
-   * Wrapped in useCallback to ensure stability and avoid unnecessary hook re-runs.
-   */
   const handleTimerUp = useCallback(async () => {
     setShowModal(true);
     setSelectedLetters([]);
@@ -101,13 +96,11 @@ function Game() {
     (selectedLetter: Letter | null, isSelected?: boolean): void => {
       setInvalidLetterId("");
 
-      // Clear selection if no letter provided.
       if (!selectedLetter) {
         setSelectedLetters([]);
         return;
       }
 
-      // Check if the selected letter is reachable from the previous one.
       if (
         !checkIfLetterValid(
           selectedLetter,
@@ -128,9 +121,6 @@ function Game() {
     [selectedLetters, isWordBreakingAllowed],
   );
 
-  /**
-   * Starts the round timer after the dice rolling animation finishes.
-   */
   const handleDiceRollEnd = useCallback(() => {
     handleSelectedLettersUpdate(null);
     startTimer(timeLimit);
@@ -148,13 +138,11 @@ function Game() {
         (previousWord: Word) => previousWord.val === word,
       );
       if (isWordDuplicate) {
-        // UI feedback for duplicate word.
         setDuplicateError(`"${word}" is already in the list!`);
         return prevWords;
       }
       return [...prevWords, { val: word, points: null }];
     });
-    // Clear selection after accepting word.
     handleSelectedLettersUpdate(null);
   }, [handleSelectedLettersUpdate, word]);
 
@@ -193,6 +181,7 @@ function Game() {
     }
 
     // Reset for next turn/round
+    setDuplicateError("");
     setShowModal(false);
     setModalView("turn");
     setSelectedLetters([]);
@@ -231,7 +220,6 @@ function Game() {
   return (
     <>
       <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 gap-6 p-4 md:grid-cols-4">
-        {/* SIDEBAR: Wordslist */}
         <aside className="hidden h-full flex-col md:flex">
           <div className="flex flex-col gap-2 border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_#000]">
             <h2 className="mb-2 border-b-2 border-black pb-1 text-xs font-black tracking-widest uppercase">
@@ -243,7 +231,6 @@ function Game() {
           </div>
         </aside>
 
-        {/* CENTER: Primary Game Area */}
         <div className="col-span-1 flex w-full flex-col items-center justify-center gap-4 md:col-span-2">
           <div className="flex w-full max-w-lg flex-col gap-3">
             <GameInfo
@@ -280,9 +267,11 @@ function Game() {
             />
           </div>
 
-          {/* DUPLICATE WORD ERROR INDICATOR */}
           {duplicateError && (
-            <div className="animate-shake absolute flex max-w-full items-center gap-3 border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#ef4444]">
+            <div
+              onClick={() => setDuplicateError("")}
+              className="animate-shake absolute flex max-w-full items-center gap-3 border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#ef4444]"
+            >
               <Ban className="text-red-500" />
               <p className="text-l font-black text-red-500 uppercase">
                 {duplicateError}
@@ -292,7 +281,6 @@ function Game() {
         </div>
       </div>
 
-      {/* MODAL: Round and Game Over results */}
       {showModal && (
         <Modal
           onCloseFn={setupNextTurn}
@@ -416,7 +404,6 @@ function Game() {
 
           {modalView === "gameSummary" && (
             <div className="flex flex-col gap-6">
-              {/* Leaderboard / Totals */}
               <div className="flex flex-col gap-3">
                 <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
                   Final Leaderboard:
