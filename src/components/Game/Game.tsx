@@ -238,9 +238,9 @@ function Game() {
               round={round}
               seconds={seconds}
             />
-            // still rerenders cause children are not memoized, but at least the
+            {/* still rerenders cause children are not memoized, but at least the
             function reference is stable and won't cause issues in child
-            components
+            components */}
             <Button
               className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_#000] transition-all hover:translate-1 hover:shadow-none disabled:opacity-50 disabled:grayscale"
               disabled={!!seconds}
