@@ -13,6 +13,21 @@ export default function Start() {
 
       {/* Main Container */}
       <div className="z-10 flex w-full max-w-md flex-col items-center justify-center">
+        {/* Language Selector */}
+        <div className="absolute top-4 right-4 flex gap-2 sm:top-6 sm:right-6">
+          {["en", "pl"].map((lang) => (
+            <button
+              key={lang}
+              onClick={() => i18n.changeLanguage(lang)}
+              className={`flex h-10 w-10 items-center justify-center border-2 border-black font-black uppercase shadow-[2px_2px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
+                i18n.language === lang ? "bg-[#00FF66]" : "bg-white"
+              }`}
+            >
+              {lang}
+            </button>
+          ))}
+        </div>
+
         <div className="mb-8 text-center sm:mb-12">
           <div className="inline-block -rotate-2 border-4 border-black bg-black px-6 py-3 shadow-[8px_8px_0_0_#fff]">
             <h1 className="text-4xl font-black tracking-tighter text-white italic sm:text-5xl">
@@ -23,8 +38,6 @@ export default function Start() {
             {t("start.selectMode")}
           </p>
         </div>
-        <button onClick={() => i18n.changeLanguage("pl")}>PL</button>
-        <button onClick={() => i18n.changeLanguage("en")}>EN</button>
         <nav className="flex w-full flex-col gap-4 sm:gap-6">
           <Link
             className="group w-full transform transition-transform active:translate-y-1"

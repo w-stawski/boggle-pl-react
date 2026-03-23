@@ -32,15 +32,13 @@ function Game() {
     setCurrentRound,
   } = useContext(SettingsContext);
 
-  const [currentPlayer, setCurrentPlayer] = useState<number | null>(
-    numberOfPlayers > 1 ? 1 : null,
-  );
+  const [currentPlayer, setCurrentPlayer] = useState<number>(1);
   const [invalidLetterId, setInvalidLetterId] = useState<string>("");
   const [selectedLetters, setSelectedLetters] = useState<Letter[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [round, setRound] = useState(1);
   const [turnHistory, setTurnHistory] = useState<
-    { player: number | null; round: number; score: number; words: Word[] }[]
+    { player: number; round: number; score: number; words: Word[] }[]
   >([]);
 
   useEffect(() => {
@@ -81,11 +79,7 @@ function Game() {
 
   const { seconds, startTimer } = useTimer(handleTimerUp);
 
-  const nextPlayer = !currentPlayer
-    ? null
-    : currentPlayer === numberOfPlayers
-      ? 1
-      : currentPlayer + 1;
+  const nextPlayer = currentPlayer === numberOfPlayers ? 1 : currentPlayer + 1;
 
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
@@ -174,7 +168,7 @@ function Game() {
       if (currentPlayer === numberOfPlayers) {
         setCurrentPlayer(1);
       } else {
-        setCurrentPlayer((prev) => (prev !== null ? prev + 1 : 1));
+        setCurrentPlayer((prev) => prev + 1);
         startTimer(timeLimit);
         return;
       }
@@ -212,7 +206,7 @@ function Game() {
         <div className="col-span-1 flex w-full flex-col items-center justify-center gap-4 md:col-span-2">
           <div className="flex w-full max-w-lg flex-col gap-3">
             <GameInfo
-              currentPlayer={currentPlayer}
+              currentPlayer={numberOfPlayers > 1 ? currentPlayer : null}
               round={round}
               seconds={seconds}
             />
@@ -252,7 +246,7 @@ function Game() {
             >
               <Ban className="text-red-500" />
               <p className="text-l font-black text-red-500 uppercase">
-                {t("game.duplicateError")}
+                {duplicateError}
               </p>
             </div>
           )}
@@ -358,17 +352,15 @@ function Game() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center border-2 border-black bg-[#FFDE00] font-black">
-                          G{h.player}
+                          {t("results.player").charAt(0)}
+                          {h.player}
                         </div>
                         <div className="flex flex-col">
                           <span className="text-xs font-black uppercase">
                             {t("results.player")} {h.player}
                           </span>
                           <span className="text-[10px] text-zinc-500 uppercase">
-                            {
-                              h.words.filter((w) => w.points && w.points > 0)
-                                .length
-                            }{" "}
+                            {h.words.filter((w) => w.points && w.points).length}
                             {t("words")}
                           </span>
                         </div>
@@ -409,7 +401,7 @@ function Game() {
                           </span>
                         </div>
                         <span className="text-3xl font-black">
-                          {result.total} pkt
+                          {result.total} {t("results.pts")}
                         </span>
                       </div>
                     ))}
@@ -424,13 +416,17 @@ function Game() {
                   <table className="w-full text-left">
                     <thead>
                       <tr className="border-b-2 border-black">
-                        <th className="py-1">Rnd</th>
+                        <th className="py-1">{t("results.round")}</th>
                         {Array.from(
                           { length: numberOfPlayers },
                           (_, i) => i + 1,
                         ).map((p) => (
-                          <th key={p} className="py-1">
-                            G{p}
+                          <th
+                            key={p}
+                            className="py-1 text-center font-black uppercase"
+                          >
+                            {t("results.player").charAt(0)}
+                            {p}
                           </th>
                         ))}
                       </tr>
@@ -444,10 +440,10 @@ function Game() {
                               { length: numberOfPlayers },
                               (_, i) => i + 1,
                             ).map((p) => (
-                              <td key={p} className="py-1">
+                              <td key={p} className="py-1 text-center">
                                 {turnHistory.find(
                                   (h) => h.player === p && h.round === r,
-                                )?.score || 0}
+                                )?.score ?? "-"}
                               </td>
                             ))}
                           </tr>
