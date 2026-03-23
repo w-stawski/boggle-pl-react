@@ -59,7 +59,6 @@ function Game() {
     setShowModal(true);
     setSelectedLetters([]);
     const results = await checkWords(words);
-
     if (results) {
       const turnScore = results.reduce(
         (acc: number, w: Word) => acc + (w.points || 0),
