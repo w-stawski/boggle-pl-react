@@ -132,8 +132,8 @@ export const diceLetters: Letter[][] = [
 ] as const;
 
 export const GameMode = {
-  single: "single",
-  hotseat: "hotseat",
+  single: "singlePlayer",
+  hotseat: "hotSeat",
   online: "online",
 } as const;
 

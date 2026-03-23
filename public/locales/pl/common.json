@@ -1,0 +1,38 @@
+{
+  "coins": "Monety",
+  "hotSeat": "Po Kolei",
+  "singlePlayer": "Pojedynczy gracz",
+  "words": "Słowa",
+  "start": {
+    "howToPlay": "Jak grać",
+    "selectMode": "Wybierz tryb"
+  },
+  "setup": {
+    "rounds": "Rundy",
+    "settings": "Ustawienia",
+    "startGame": "Rozpocznij Grę",
+    "time": "Czas",
+    "wordBreaking": "Dzielenie słów"
+  },
+  "game": {
+    "rollDice": "Rzuć kostką",
+    "duplicateError": "Słowo już zostało użyte"
+  },
+  "results": {
+    "backToMenu": "Powrót do menu",
+    "checkedWords": "Sprawdzone słowa",
+    "checkingWords": "Sprawdzanie słów",
+    "finalResults": "Wyniki końcowe",
+    "nextRound": "Następna runda",
+    "noValidWords": "Brak poprawnych słów",
+    "player": "Gracz",
+    "points": "Punkty",
+    "resultsComparison": "Porównanie wyników",
+    "round": "Runda",
+    "roundComparison": "Porównanie rundy",
+    "showSummary": "Pokaż podsumowanie",
+    "turnResults": "Wyniki tury",
+    "history": "Historia",
+    "next": "Następny"
+  }
+}

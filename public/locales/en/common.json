@@ -1,0 +1,38 @@
+{
+  "coins": "Coins",
+  "hotSeat": "Hot Seat",
+  "singlePlayer": "Single Player",
+  "words": "Words",
+  "start": {
+    "howToPlay": "How to Play",
+    "selectMode": "Select Mode"
+  },
+  "setup": {
+    "rounds": "Rounds",
+    "settings": "Settings",
+    "startGame": "Start Game",
+    "time": "Time",
+    "wordBreaking": "Word Breaking"
+  },
+  "game": {
+    "rollDice": "Roll the Dice",
+    "duplicateError": "Word has already been used"
+  },
+  "results": {
+    "backToMenu": "Back to Menu",
+    "checkedWords": "Checked Words",
+    "checkingWords": "Checking Words",
+    "finalResults": "Final Results",
+    "nextRound": "Next Round",
+    "noValidWords": "No Valid Words",
+    "player": "Player",
+    "points": "Points",
+    "resultsComparison": "Results Comparison",
+    "round": "Round",
+    "roundComparison": "Round Comparison",
+    "showSummary": "Show Summary",
+    "turnResults": "Turn Results",
+    "history": "History",
+    "next": "Next"
+  }
+}

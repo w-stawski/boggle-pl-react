@@ -9,6 +9,7 @@ import Setup from "./components/Setup/Setup";
 import Start from "./components/Start/Start";
 import { Analytics } from "@vercel/analytics/react";
 import { SettingsContextProvider } from "./contexts/SettingsContextProvider";
+import { GameMode } from "./utils/constants";
 
 const router = createBrowserRouter([
   {
@@ -40,11 +41,11 @@ const router = createBrowserRouter([
             loader: () => redirect("/start"),
           },
           {
-            path: "single",
+            path: GameMode.single,
             element: <Game />,
           },
           {
-            path: "hotseat",
+            path: GameMode.hotseat,
             element: <Game />,
           },
         ],

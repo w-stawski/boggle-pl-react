@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { SettingsContext } from "../../contexts/SettingsContext.js";
 import { useDice } from "../../hooks/useDice.js";
@@ -21,6 +22,7 @@ import SelectedLetters from "../SelectedLetters/SelectedLetters.js";
 import Wordslist from "../Wordslist/Wordslist.js";
 
 function Game() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const {
     timeLimit,
@@ -85,13 +87,8 @@ function Game() {
       ? 1
       : currentPlayer + 1;
 
-  // Derive the current word string from the array of selected letters.
   const word = selectedLetters.map((letter: Letter) => letter.val).join("");
 
-  /**
-   * Updates the list of currently selected letters in the board.
-   * Handles validation (adjacency, duplicate selection) and state updates.
-   */
   const handleSelectedLettersUpdate = useCallback(
     (selectedLetter: Letter | null, isSelected?: boolean): void => {
       setInvalidLetterId("");
@@ -113,7 +110,6 @@ function Game() {
         return;
       }
 
-      // Append or remove letter from current selection.
       setSelectedLetters((lettersArr) =>
         getLetterArrWithNewLetter(selectedLetter, lettersArr),
       );
@@ -128,59 +124,45 @@ function Game() {
 
   const { diceValues, rollDice } = useDice(handleDiceRollEnd);
 
-  /**
-   * Finalizes the current word and adds it to the player's word list.
-   * Includes duplicate check to prevent point exploitation.
-   */
   const onWordAccept = useCallback((): void => {
     setWords((prevWords) => {
       const isWordDuplicate = prevWords.some(
         (previousWord: Word) => previousWord.val === word,
       );
       if (isWordDuplicate) {
-        setDuplicateError(`"${word}" is already in the list!`);
+        setDuplicateError(`"${word}" ${t("game.duplicateError")}!`);
         return prevWords;
       }
       return [...prevWords, { val: word, points: null }];
     });
     handleSelectedLettersUpdate(null);
-  }, [handleSelectedLettersUpdate, word]);
+  }, [handleSelectedLettersUpdate, word, t]);
 
-  /**
-   * Prepares the state for the next turn or round.
-   * Manages round increments and multiplayer turn switching.
-   */
   const setupNextTurn = useCallback((): void => {
-    // If we're on a turn result view and there are other views to show (comparison or summary)
     if (showModal) {
       if (modalView === "turn") {
         if (numberOfPlayers > 1) {
-          // In hotseat, show comparison after last player of round
           if (currentPlayer === numberOfPlayers) {
             setModalView("roundComparison");
             return;
           }
         } else if (round === roundLimit) {
-          // Single player: go straight to game summary if it's the last round
           setModalView("gameSummary");
           setIsGameOver(true);
           return;
         }
       } else if (modalView === "roundComparison") {
-        // After round comparison, either go to next round or game summary
         if (round === roundLimit) {
           setModalView("gameSummary");
           setIsGameOver(true);
           return;
         }
       } else if (modalView === "gameSummary") {
-        // Game is finally over, go back to start
         navigate("/start");
         return;
       }
     }
 
-    // Reset for next turn/round
     setDuplicateError("");
     setShowModal(false);
     setModalView("turn");
@@ -188,7 +170,6 @@ function Game() {
     setWords([]);
     resetCheckedWords();
 
-    // Multiplayer turn logic.
     if (numberOfPlayers > 1) {
       if (currentPlayer === numberOfPlayers) {
         setCurrentPlayer(1);
@@ -199,10 +180,7 @@ function Game() {
       }
     }
 
-    // Round progression logic.
     const nextRound = round + 1;
-
-    // We only reach here if we've handled comparisons/summaries or they aren't needed yet
     setRound(nextRound);
   }, [
     showModal,
@@ -223,7 +201,7 @@ function Game() {
         <aside className="hidden h-full flex-col md:flex">
           <div className="flex flex-col gap-2 border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_#000]">
             <h2 className="mb-2 border-b-2 border-black pb-1 text-xs font-black tracking-widest uppercase">
-              Words ({words.length})
+              {t("words")} ({words.length})
             </h2>
             <div className="max-h-[60vh] overflow-y-auto">
               <Wordslist words={words} />
@@ -238,20 +216,17 @@ function Game() {
               round={round}
               seconds={seconds}
             />
-            {/* still rerenders cause children are not memoized, but at least the
-            function reference is stable and won't cause issues in child
-            components */}
             <Button
               className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_#000] transition-all hover:translate-1 hover:shadow-none disabled:opacity-50 disabled:grayscale"
               disabled={!!seconds}
               onClickFn={useCallback(() => rollDice(15), [rollDice])}
-              aria-label="Roll the dice to start the game"
+              aria-label={t("game.rollDice")}
             >
               <Dices
                 size={28}
                 className="transition-transform group-hover:rotate-12"
               />
-              roll the dice
+              {t("game.rollDice")}
             </Button>
             <SelectedLetters
               word={word}
@@ -277,7 +252,7 @@ function Game() {
             >
               <Ban className="text-red-500" />
               <p className="text-l font-black text-red-500 uppercase">
-                {duplicateError}
+                {t("game.duplicateError")}
               </p>
             </div>
           )}
@@ -290,26 +265,26 @@ function Game() {
           title={
             modalView === "turn"
               ? isGameOver
-                ? "Final Turn Results"
-                : "Turn Results"
+                ? t("results.finalResults")
+                : t("results.turnResults")
               : modalView === "roundComparison"
-                ? `Round ${round} Comparison`
-                : "Final Results Summary"
+                ? `${t("results.roundComparison")} ${round}`
+                : t("results.finalResults")
           }
           closeButtonAltText={
             modalView === "turn"
               ? numberOfPlayers > 1
                 ? currentPlayer === numberOfPlayers
-                  ? "Compare Results"
-                  : `Next: Player ${nextPlayer}`
+                  ? t("results.resultsComparison")
+                  : `${t("results.next")}: ${t("results.player")} ${nextPlayer}`
                 : round === roundLimit
-                  ? "Show Summary"
-                  : "Next Round"
+                  ? t("results.showSummary")
+                  : t("results.nextRound")
               : modalView === "roundComparison"
                 ? round === roundLimit
-                  ? "Final Summary"
-                  : "Next Round"
-                : "Back to Menu"
+                  ? t("results.showSummary")
+                  : t("results.nextRound")
+                : t("results.backToMenu")
           }
         >
           {modalView === "turn" && (
@@ -317,13 +292,13 @@ function Game() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="border-4 border-black bg-[#FFDE00] p-4 shadow-[4px_4px_0_0_#000]">
                   <p className="text-[10px] font-black uppercase opacity-60">
-                    Round
+                    {t("results.round")}
                   </p>
                   <p className="text-3xl font-black">{round}</p>
                 </div>
                 <div className="border-4 border-black bg-[#00FF66] p-4 shadow-[4px_4px_0_0_#000]">
                   <p className="text-[10px] font-black uppercase opacity-60">
-                    Turn Points
+                    {t("results.points")}
                   </p>
                   <p className="text-3xl font-black">
                     {checkedWords.reduce((acc, w) => acc + (w.points || 0), 0)}
@@ -333,14 +308,14 @@ function Game() {
 
               <div className="flex flex-col gap-3">
                 <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
-                  Validated Words:
+                  {t("results.checkedWords")}:
                 </h3>
                 <div className="max-h-48 overflow-y-auto rounded-sm border-2 border-black bg-zinc-50 p-3">
                   {areResultsLoading ? (
                     <div className="flex flex-col items-center gap-3 py-4">
                       <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#FF00FF] border-t-transparent" />
                       <p className="text-xs font-black uppercase">
-                        Checking Dictionary...
+                        {t("results.checkingWords")}...
                       </p>
                     </div>
                   ) : checkedWords.length > 0 ? (
@@ -363,7 +338,7 @@ function Game() {
                     </ul>
                   ) : (
                     <p className="py-4 text-center text-xs font-bold text-zinc-400 uppercase italic">
-                      No valid words found this turn.
+                      {t("results.noValidWords")}
                     </p>
                   )}
                 </div>
@@ -383,18 +358,18 @@ function Game() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center border-2 border-black bg-[#FFDE00] font-black">
-                          P{h.player}
+                          G{h.player}
                         </div>
                         <div className="flex flex-col">
                           <span className="text-xs font-black uppercase">
-                            Player {h.player}
+                            {t("results.player")} {h.player}
                           </span>
                           <span className="text-[10px] text-zinc-500 uppercase">
                             {
                               h.words.filter((w) => w.points && w.points > 0)
                                 .length
                             }{" "}
-                            Words
+                            {t("words")}
                           </span>
                         </div>
                       </div>
@@ -409,7 +384,7 @@ function Game() {
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
                 <h3 className="text-sm font-black tracking-widest uppercase underline decoration-4 underline-offset-4">
-                  Final Leaderboard:
+                  {t("results.finalResults")}:
                 </h3>
                 <div className="flex flex-col gap-3">
                   {Array.from({ length: numberOfPlayers }, (_, i) => i + 1)
@@ -430,21 +405,20 @@ function Game() {
                             {idx === 0 ? "🏆" : `${idx + 1}.`}
                           </span>
                           <span className="font-black uppercase">
-                            Player {result.player}
+                            {t("results.player")} {result.player}
                           </span>
                         </div>
                         <span className="text-3xl font-black">
-                          {result.total} pts
+                          {result.total} pkt
                         </span>
                       </div>
                     ))}
                 </div>
               </div>
 
-              {/* Round by Round Breakdown */}
               <div className="flex flex-col gap-3">
                 <h3 className="text-sm font-black tracking-widest uppercase">
-                  History:
+                  {t("results.history")}:
                 </h3>
                 <div className="max-h-48 overflow-y-auto border-2 border-black bg-zinc-50 p-2 font-mono text-xs">
                   <table className="w-full text-left">
@@ -456,7 +430,7 @@ function Game() {
                           (_, i) => i + 1,
                         ).map((p) => (
                           <th key={p} className="py-1">
-                            P{p}
+                            G{p}
                           </th>
                         ))}
                       </tr>
