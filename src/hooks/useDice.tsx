@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { getDiceRandomValues } from "../utils/helpers";
 import type { Letter } from "../utils/types";
 
@@ -30,7 +30,7 @@ export const useDice = (onDiceRollEndFn: () => void): useDiceType => {
    * Triggers a recursive dice roll animation.
    * @param repeat - Number of times to "shuffle" before settling on values.
    */
-  const rollDice = useCallback(function roll(repeat: number): void {
+  const rollDice = function roll(repeat: number): void {
     // Prevent state updates if the user navigated away.
     if (!isMounted.current) return;
 
@@ -44,7 +44,15 @@ export const useDice = (onDiceRollEndFn: () => void): useDiceType => {
 
     // Callback when the animation finishes.
     onDiceRollEndFnRef.current();
-  }, []);
+  };
 
-  return { diceValues, rollDice };
+  const result = useMemo(
+    () => ({
+      diceValues,
+      rollDice,
+    }),
+    [diceValues],
+  );
+
+  return result;
 };

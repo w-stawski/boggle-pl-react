@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { SettingsContext } from "../../contexts/SettingsContext.js";
@@ -238,11 +238,13 @@ function Game() {
               round={round}
               seconds={seconds}
             />
-
+            // still rerenders cause children are not memoized, but at least the
+            function reference is stable and won't cause issues in child
+            components
             <Button
               className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_#000] transition-all hover:translate-1 hover:shadow-none disabled:opacity-50 disabled:grayscale"
               disabled={!!seconds}
-              onClickFn={() => rollDice(15)}
+              onClickFn={useCallback(() => rollDice(15), [rollDice])}
               aria-label="Roll the dice to start the game"
             >
               <Dices
@@ -251,17 +253,18 @@ function Game() {
               />
               roll the dice
             </Button>
-
             <SelectedLetters
               word={word}
               onOkClickFn={onWordAccept}
               disabled={selectedLetters.length < 3}
             />
-
             <Diceboard
               letters={diceValues}
               onLetterSelect={handleSelectedLettersUpdate}
-              selectedLettersIds={selectedLetters.map((letter) => letter.id)}
+              selectedLettersIds={useMemo(
+                () => selectedLetters.map((letter) => letter.id),
+                [selectedLetters],
+              )}
               invalidLetterId={invalidLetterId}
               disabled={!seconds}
             />
