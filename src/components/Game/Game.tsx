@@ -1,15 +1,11 @@
-import { useNavigate } from "react-router-dom";
-
 import { useSettings } from "../../contexts/SettingsContext.js";
-import { useGameSession } from "../../hooks/useGameSession.js";
-import { usePlayTurn } from "../../hooks/usePlayTurn.js";
+import { useGameLogic } from "../../hooks/useGameLogic.js";
 
 import GamePlayfield from "./GamePlayfield.js";
 import GameResultsModal from "./GameResultsModal.js";
 import GameSidebar from "./GameSidebar.js";
 
 function Game() {
-  const navigate = useNavigate();
   const {
     timeLimit,
     roundLimit,
@@ -18,53 +14,48 @@ function Game() {
     setCurrentRound,
   } = useSettings();
 
-  const playTurn = usePlayTurn({ isWordBreakingAllowed });
-
-  const session = useGameSession({
+  const game = useGameLogic({
     timeLimit,
     roundLimit,
     numberOfPlayers,
+    isWordBreakingAllowed,
     setCurrentRound,
-    navigate,
-    wordsRef: playTurn.wordsRef,
-    clearSelection: playTurn.clearSelection,
-    resetPlayForNextRound: playTurn.resetPlayForNextRound,
   });
 
   return (
     <>
       <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 gap-6 p-4 md:grid-cols-4">
-        <GameSidebar words={playTurn.words} />
+        <GameSidebar words={game.words} />
         <GamePlayfield
-          currentPlayer={numberOfPlayers > 1 ? session.currentPlayer : null}
-          round={session.round}
-          seconds={session.seconds}
-          word={playTurn.word}
-          selectedLettersCount={playTurn.selectedLetters.length}
-          diceValues={session.diceValues}
-          selectedLettersIds={playTurn.selectedLettersIds}
-          invalidLetterId={playTurn.invalidLetterId}
-          duplicateError={playTurn.duplicateError}
-          onRollDice={session.handleRollDice}
-          onWordAccept={playTurn.onWordAccept}
-          onLetterSelect={playTurn.handleSelectedLettersUpdate}
-          onDismissDuplicateError={playTurn.dismissDuplicateError}
+          currentPlayer={numberOfPlayers > 1 ? game.currentPlayer : null}
+          round={game.round}
+          seconds={game.seconds}
+          word={game.word}
+          selectedLettersCount={game.selectedLetters.length}
+          diceValues={game.diceValues}
+          selectedLettersIds={game.selectedLettersIds}
+          invalidLetterId={game.invalidLetterId}
+          duplicateError={game.duplicateError}
+          onRollDice={game.handleRollDice}
+          onWordAccept={game.onWordAccept}
+          onLetterSelect={game.handleSelectedLettersUpdate}
+          onDismissDuplicateError={game.dismissDuplicateError}
         />
       </div>
 
-      {session.showModal && (
+      {game.showModal && (
         <GameResultsModal
-          modalView={session.modalView}
-          isGameOver={session.isGameOver}
-          round={session.round}
+          modalView={game.modalView}
+          isGameOver={game.isGameOver}
+          round={game.round}
           roundLimit={roundLimit}
           numberOfPlayers={numberOfPlayers}
-          currentPlayer={session.currentPlayer}
-          nextPlayer={session.nextPlayer}
-          checkedWords={session.checkedWords}
-          areResultsLoading={session.areResultsLoading}
-          turnHistory={session.turnHistory}
-          onCloseFn={session.setupNextTurn}
+          currentPlayer={game.currentPlayer}
+          nextPlayer={game.nextPlayer}
+          checkedWords={game.checkedWords}
+          areResultsLoading={game.areResultsLoading}
+          turnHistory={game.turnHistory}
+          onCloseFn={game.setupNextTurn}
         />
       )}
     </>
