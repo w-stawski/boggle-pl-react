@@ -9,3 +9,10 @@ export type Word = {
   /** `null` until validated; `0` if invalid; positive if scored. */
   points: number | null;
 };
+
+export type TurnHistoryEntry = {
+  player: number;
+  round: number;
+  score: number;
+  words: Word[];
+};
