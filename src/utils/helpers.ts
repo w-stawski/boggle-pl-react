@@ -85,11 +85,16 @@ export const checkIfLetterValid = (
       : selectedLetters[selectedLetters.length - 1].id === letter.id;
   }
 
+  const pos = letter.position;
+  const prevPos = selectedLetters[selectedLetters.length - 1]?.position;
+  if (!pos || !prevPos) {
+    return false;
+  }
+
   // Rule: Candidate must be adjacent (including diagonals) to the last selected letter.
-  const { row: currentlySelectedRow, column: currentlySelectedColumn } =
-    letter.position;
+  const { row: currentlySelectedRow, column: currentlySelectedColumn } = pos;
   const { row: previouslySelectedRow, column: previouslySelectedColumn } =
-    selectedLetters[selectedLetters.length - 1].position;
+    prevPos;
 
   const rowDistance = Math.abs(currentlySelectedRow - previouslySelectedRow);
   const columnDistance = Math.abs(

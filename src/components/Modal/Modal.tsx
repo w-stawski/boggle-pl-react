@@ -17,6 +17,13 @@ export default function Modal({
   title?: string;
 }>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // Reason: Ensure dialog always receives focus when shown for accessibility and keyboard operation.
+  const onCloseRef = useRef(onCloseFn);
+
+  useEffect(() => {
+    onCloseRef.current = onCloseFn;
+  }, [onCloseFn]);
+
   const modalRoot = document.getElementById("modal");
 
   useEffect(() => {
@@ -32,7 +39,7 @@ export default function Modal({
     // Handle the 'cancel' event (Escape key) to ensure our state stays in sync
     const handleCancel = (e: Event) => {
       e.preventDefault();
-      onCloseFn();
+      onCloseRef.current();
     };
 
     dialog.addEventListener("cancel", handleCancel);
@@ -42,14 +49,15 @@ export default function Modal({
       document.body.style.overflow = "";
       dialog.close();
     };
-  }, [onCloseFn]);
+    // Intentionally empty: open/close dialog once per mount; latest handler via onCloseRef.
+  }, []);
 
   if (!modalRoot) return null;
 
   return createPortal(
     <dialog
       ref={dialogRef}
-      className="fixed ml-3 inset-0 z-100 flex h-screen w-screen items-center justify-center bg-transparent p-4 outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-100 ml-3 flex h-screen w-screen items-center justify-center bg-transparent p-4 outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm sm:p-6"
       aria-labelledby="modal-title"
     >
       {/* Modal Content Container */}
@@ -58,13 +66,14 @@ export default function Modal({
         <div className="flex items-center justify-between border-b-4 border-black bg-[#FFDE00] p-4">
           <h2
             id="modal-title"
-            className="text-xl font-black text-black uppercase mx-auto"
+            className="mx-auto text-xl font-black text-black uppercase"
           >
             {title}
           </h2>
           <button
             className="group flex items-center justify-center border-2 border-black bg-white p-1 transition-transform active:scale-90"
-            onClick={onCloseFn}
+            type="button"
+            onClick={() => onCloseRef.current()}
             aria-label="Close modal"
           >
             <X size={24} strokeWidth={3} />
@@ -77,8 +86,9 @@ export default function Modal({
         {/* Modal Footer / Action */}
         <div className="border-t-4 border-black bg-zinc-50 p-4">
           <button
-            onClick={onCloseFn}
-            className="flex w-full items-center justify-center border-4 border-black bg-[#00FF66] py-3 text-xl font-black uppercase shadow-[4px_4px_0_0_#000] cursor-pointer transition-all hover:translate-1 hover:shadow-none active:bg-white"
+            type="button"
+            onClick={() => onCloseRef.current()}
+            className="flex w-full cursor-pointer items-center justify-center border-4 border-black bg-[#00FF66] py-3 text-xl font-black uppercase shadow-[4px_4px_0_0_#000] transition-all hover:translate-1 hover:shadow-none active:bg-white"
           >
             {closeButtonAltText || "Next Round"}
           </button>

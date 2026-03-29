@@ -26,7 +26,9 @@ test("should show the game board with the roll dice button initially", () => {
     </MemoryRouter>,
   );
 
-  expect(screen.getByText(/roll the dice/i)).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "game.rollDice" }),
+  ).toBeInTheDocument();
   expect(screen.getByText(/words \(0\)/i)).toBeInTheDocument();
 });
 
@@ -39,5 +41,5 @@ test("should display the current round and player info", () => {
     </MemoryRouter>,
   );
 
-  expect(screen.getByText(/round: 1/i)).toBeInTheDocument();
+  expect(screen.getByText(/RND:\s*1/)).toBeInTheDocument();
 });

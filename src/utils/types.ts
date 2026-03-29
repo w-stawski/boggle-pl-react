@@ -1,9 +1,11 @@
 export type Letter = {
   val: string;
   id: string;
-  position: { row: number; column: number };
+  /** Set on the live board; `null` on dice face templates in `constants`. */
+  position: { row: number; column: number } | null;
 };
 export type Word = {
   val: string;
-  points: number;
+  /** `null` until validated; `0` if invalid; positive if scored. */
+  points: number | null;
 };

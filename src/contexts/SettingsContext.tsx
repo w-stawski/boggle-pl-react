@@ -1,4 +1,9 @@
-import { createContext, type Dispatch, type SetStateAction } from "react";
+import {
+  createContext,
+  useContext,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 export type GameContextType = {
   timeLimit: number;
@@ -13,4 +18,12 @@ export type GameContextType = {
   setCurrentRound: Dispatch<SetStateAction<number>>;
 };
 
-export const SettingsContext = createContext<GameContextType>(null);
+export const SettingsContext = createContext<GameContextType | null>(null);
+
+export function useSettings(): GameContextType {
+  const ctx = useContext(SettingsContext);
+  if (ctx === null) {
+    throw new Error("useSettings must be used within SettingsContextProvider");
+  }
+  return ctx;
+}

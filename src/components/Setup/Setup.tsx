@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import type { FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SettingsContext } from "../../contexts/SettingsContext";
+import { useSettings } from "../../contexts/SettingsContext";
 import { GameMode } from "../../utils/constants";
 import Button from "../Button/Button";
 import { Settings2, Timer, Repeat, Hash } from "lucide-react";
@@ -15,11 +15,11 @@ export default function Setup() {
     setTimeLimit,
     setIsWordBreakingAllowed,
     setNumberOfPlayers,
-  } = useContext(SettingsContext);
+  } = useSettings();
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -45,7 +45,8 @@ export default function Setup() {
         {/* Header Label */}
         <div className="mb-6 inline-block rotate-1 border-4 border-black bg-white px-4 py-1.5 shadow-[4px_4px_0_0_#000] sm:mb-8 sm:px-6 sm:py-2 sm:shadow-[6px_6px_0_0_#000]">
           <h1 className="flex items-center gap-2 text-xl font-black text-black uppercase sm:text-2xl">
-            <Settings2 size={24} /> {`${t(mode)} - ${t("setup.settings")}`}
+            <Settings2 size={24} />{" "}
+            {`${t(mode ?? GameMode.single)} - ${t("setup.settings")}`}
           </h1>
         </div>
 

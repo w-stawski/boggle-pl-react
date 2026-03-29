@@ -1,8 +1,8 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { SettingsContext } from "../../contexts/SettingsContext.js";
+import { useSettings } from "../../contexts/SettingsContext.js";
 import { useDice } from "../../hooks/useDice.js";
 import { useDictionaryCheck } from "../../hooks/useDictionaryCheck.js";
 import { useTimer } from "../../hooks/useTimer.js";
@@ -30,7 +30,7 @@ function Game() {
     isWordBreakingAllowed,
     numberOfPlayers,
     setCurrentRound,
-  } = useContext(SettingsContext);
+  } = useSettings();
 
   const [currentPlayer, setCurrentPlayer] = useState<number>(1);
   const [invalidLetterId, setInvalidLetterId] = useState<string>("");
@@ -61,7 +61,7 @@ function Game() {
     const results = await checkWords(words);
     if (results) {
       const turnScore = results.reduce(
-        (acc: number, w: Word) => acc + (w.points || 0),
+        (acc: number, w: Word) => acc + (w.points ?? 0),
         0,
       );
       setTurnHistory((prev) => [
@@ -95,7 +95,7 @@ function Game() {
         !checkIfLetterValid(
           selectedLetter,
           selectedLetters,
-          isSelected,
+          isSelected ?? false,
           isWordBreakingAllowed,
         )
       ) {
@@ -116,6 +116,13 @@ function Game() {
   }, [handleSelectedLettersUpdate, startTimer, timeLimit]);
 
   const { diceValues, rollDice } = useDice(handleDiceRollEnd);
+
+  const handleRollDice = useCallback(() => rollDice(15), [rollDice]);
+
+  const selectedLettersIds = useMemo(
+    () => selectedLetters.map((letter) => letter.id),
+    [selectedLetters],
+  );
 
   const onWordAccept = useCallback((): void => {
     setWords((prevWords) => {
@@ -212,7 +219,7 @@ function Game() {
             <Button
               className="group flex h-14 w-full items-center justify-center gap-4 border-4 border-black bg-[#FF00FF] text-2xl font-black text-black uppercase shadow-[6px_6px_0_0_#000] transition-all hover:translate-1 hover:shadow-none disabled:opacity-50 disabled:grayscale"
               disabled={!!seconds}
-              onClickFn={useCallback(() => rollDice(15), [rollDice])}
+              onClickFn={handleRollDice}
               aria-label={t("game.rollDice")}
             >
               <Dices
@@ -229,10 +236,7 @@ function Game() {
             <Diceboard
               letters={diceValues}
               onLetterSelect={handleSelectedLettersUpdate}
-              selectedLettersIds={useMemo(
-                () => selectedLetters.map((letter) => letter.id),
-                [selectedLetters],
-              )}
+              selectedLettersIds={selectedLettersIds}
               invalidLetterId={invalidLetterId}
               disabled={!seconds}
             />
@@ -294,7 +298,7 @@ function Game() {
                     {t("results.points")}
                   </p>
                   <p className="text-3xl font-black">
-                    {checkedWords.reduce((acc, w) => acc + (w.points || 0), 0)}
+                    {checkedWords.reduce((acc, w) => acc + (w.points ?? 0), 0)}
                   </p>
                 </div>
               </div>
@@ -322,9 +326,9 @@ function Game() {
                             {w.val}
                           </span>
                           <span
-                            className={`font-black ${w.points ? "text-green-600" : "text-red-500"}`}
+                            className={`font-black ${(w.points ?? 0) > 0 ? "text-green-600" : "text-red-500"}`}
                           >
-                            {w.points ? `+${w.points}` : "0"}
+                            {(w.points ?? 0) > 0 ? `+${w.points}` : "0"}
                           </span>
                         </li>
                       ))}
@@ -359,7 +363,9 @@ function Game() {
                             {t("results.player")} {h.player}
                           </span>
                           <span className="text-[10px] text-zinc-500 uppercase">
-                            {h.words.filter((w) => w.points && w.points).length}
+                            {
+                              h.words.filter((w) => (w.points ?? 0) > 0).length
+                            }
                             {t("words")}
                           </span>
                         </div>

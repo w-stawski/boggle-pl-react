@@ -18,7 +18,7 @@ export default memo(function Wordslist({
   blackoutWords,
 }: WordslistProps) {
   const total = isFinalBoard
-    ? words.reduce((acc, word) => acc + (word.points || 0), 0)
+    ? words.reduce((acc, word) => acc + (word.points ?? 0), 0)
     : null;
   const bottomRef = useRef<HTMLDivElement>(null);
 
