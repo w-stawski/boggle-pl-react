@@ -12,6 +12,12 @@ i18n
     backend: {
       loadPath: "/locales/{{lng}}/common.json",
     },
+    interpolation: {
+      escapeValue: false, // react already safes from xss
+    },
+    react: {
+      useSuspense: false,
+    },
   });
 
 export default i18n;

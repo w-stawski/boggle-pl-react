@@ -20,7 +20,10 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col font-mono selection:bg-black selection:text-white">
-      <div className="fixed inset-0 z-0 bg-[#FFDE00]">
+      <div
+        className="fixed inset-0 z-0 bg-[#FFDE00]"
+        style={{ contain: "strict", contentVisibility: "auto" }}
+      >
         <canvas
           ref={canvasRef}
           className="h-full w-full opacity-25"

@@ -104,10 +104,6 @@ export function useBackgroundShader() {
      */
     const render = (time: number) => {
       if (!canvas) return;
-      // Responsive canvas sizing.
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-      gl.viewport(0, 0, canvas.width, canvas.height);
       gl.useProgram(program);
 
       // Update uniforms.
@@ -121,11 +117,30 @@ export function useBackgroundShader() {
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       animId = requestAnimationFrame(render);
     };
+
+    const handleResize = () => {
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const displayWidth = Math.floor(canvas.clientWidth * dpr);
+      const displayHeight = Math.floor(canvas.clientHeight * dpr);
+
+      if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+        canvas.width = displayWidth;
+        canvas.height = displayHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+    };
+
+    // Initial size setup.
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
     let animId = requestAnimationFrame(render);
 
     // Comprehensive cleanup on unmount.
     return () => {
       cancelAnimationFrame(animId);
+      window.removeEventListener("resize", handleResize);
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);

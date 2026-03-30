@@ -5,7 +5,7 @@ import { GameMode } from "../../utils/constants";
 import Button from "../Button/Button";
 
 export default function Start() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n, ready } = useTranslation();
 
   return (
     <div className="relative flex w-full flex-1 flex-col items-center justify-center overflow-hidden bg-[#FFDE00] p-4 font-mono sm:p-6">
@@ -34,8 +34,8 @@ export default function Start() {
               PL<span className="text-[#FFDE00]">OGGLE</span>
             </h1>
           </div>
-          <p className="mt-4 text-xs font-bold tracking-[0.2em] text-black uppercase sm:text-sm">
-            {t("start.selectMode")}
+          <p className="mt-4 h-5 text-xs font-bold tracking-[0.2em] text-black uppercase sm:text-sm">
+            {ready ? t("start.selectMode") : "..."}
           </p>
         </div>
         <nav className="flex w-full flex-col gap-4 sm:gap-6">
@@ -45,7 +45,8 @@ export default function Start() {
           >
             <Button className="flex h-16 w-full items-center justify-between border-4 border-black bg-[#00FF66] px-6 text-lg font-black text-black uppercase shadow-[6px_6px_0_0_#000] hover:translate-1 hover:shadow-none sm:h-20 sm:text-xl sm:shadow-[8px_8px_0_0_#000]">
               <span className="flex items-center gap-3">
-                <Zap fill="black" size={20} /> {t("singlePlayer")}
+                <Zap fill="black" size={20} />{" "}
+                {ready ? t("singlePlayer") : "..."}
               </span>
               <span className="text-2xl">→</span>
             </Button>
@@ -57,7 +58,7 @@ export default function Start() {
           >
             <Button className="flex h-16 w-full items-center justify-between border-4 border-black bg-[#FF00FF] px-6 text-lg font-black text-black uppercase shadow-[6px_6px_0_0_#000] hover:translate-1 hover:shadow-none sm:h-20 sm:text-xl sm:shadow-[8px_8px_0_0_#000]">
               <span className="flex items-center gap-3">
-                <Users fill="black" size={20} /> {t("hotSeat")}
+                <Users fill="black" size={20} /> {ready ? t("hotSeat") : "..."}
               </span>
               <span className="text-2xl">→</span>
             </Button>
@@ -81,7 +82,7 @@ export default function Start() {
             rel="noopener noreferrer"
           >
             <HelpCircle size={18} />
-            {t("start.howToPlay")}
+            {ready ? t("start.howToPlay") : "..."}
           </a>
         </nav>
       </div>
