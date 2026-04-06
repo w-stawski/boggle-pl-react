@@ -69,6 +69,7 @@ test("applies disabled styles and pointer-events-none", () => {
     />,
   );
 
-  const grid = container.firstChild;
+  const grid = container.querySelector('[role="grid"]');
+  expect(grid).toBeTruthy();
   expect(grid).toHaveClass("opacity-50", "pointer-events-none");
 });

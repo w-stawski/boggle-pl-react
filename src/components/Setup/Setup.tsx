@@ -119,8 +119,10 @@ export default function Setup() {
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
                   type="checkbox"
+                  id="allow-word-breaking"
                   name="allow-word-breaking"
                   className="peer sr-only"
+                  aria-label={t("setup.wordBreaking")}
                 />
                 <div className="h-8 w-14 border-4 border-black bg-white transition-colors peer-checked:bg-[#00FF66]" />
                 <div className="absolute top-1.5 left-1.5 h-5 w-3 border-2 border-black bg-black transition-transform peer-checked:translate-x-6" />

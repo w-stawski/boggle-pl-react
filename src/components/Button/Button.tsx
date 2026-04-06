@@ -26,7 +26,7 @@ export default memo(function Button({
       disabled={disabled}
       aria-label={ariaLabel}
       className={cn(
-        "cursor-pointer transition-all disabled:pointer-events-none disabled:opacity-50",
+        "cursor-pointer transition-all disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white",
         className,
       )}
       onClick={onClick || onClickFn}

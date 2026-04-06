@@ -17,8 +17,8 @@ export default function Modal({
   title?: string;
 }>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  // Reason: Ensure dialog always receives focus when shown for accessibility and keyboard operation.
   const onCloseRef = useRef(onCloseFn);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     onCloseRef.current = onCloseFn;
@@ -30,8 +30,14 @@ export default function Modal({
     const dialog = dialogRef.current;
     if (!dialog) return;
 
+    previouslyFocusedRef.current =
+      (document.activeElement as HTMLElement | null) ?? null;
+
     // Open as modal to enable backdrop and focus trapping
     dialog.showModal();
+
+    // Ensure the dialog itself is focusable and focused (keyboard + SR)
+    dialog.focus();
 
     // Prevent scrolling of the body when modal is open
     document.body.style.overflow = "hidden";
@@ -48,6 +54,9 @@ export default function Modal({
       dialog.removeEventListener("cancel", handleCancel);
       document.body.style.overflow = "";
       dialog.close();
+
+      // Restore focus to where the user was before opening the modal.
+      previouslyFocusedRef.current?.focus?.();
     };
     // Intentionally empty: open/close dialog once per mount; latest handler via onCloseRef.
   }, []);
@@ -59,7 +68,13 @@ export default function Modal({
       ref={dialogRef}
       className="fixed inset-0 z-100 ml-3 flex h-screen w-screen items-center justify-center bg-transparent p-4 outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm sm:p-6"
       aria-labelledby="modal-title"
+      aria-describedby="modal-desc"
+      aria-modal="true"
+      tabIndex={-1}
     >
+      <p id="modal-desc" className="sr-only">
+        Press Escape to close this dialog, or use the close button.
+      </p>
       {/* Modal Content Container */}
       <div className="relative mx-auto flex max-h-[90vh] w-full max-w-xl flex-col border-4 border-black bg-white shadow-[12px_12px_0_0_#000]">
         {/* Modal Header */}

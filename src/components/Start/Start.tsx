@@ -19,9 +19,12 @@ export default function Start() {
             <button
               key={lang}
               onClick={() => i18n.changeLanguage(lang)}
+              type="button"
+              aria-pressed={i18n.language === lang}
+              aria-label={`Change language to ${lang}`}
               className={`flex h-10 w-10 items-center justify-center border-2 border-black font-black uppercase shadow-[2px_2px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none ${
                 i18n.language === lang ? "bg-[#00FF66]" : "bg-white"
-              }`}
+              } focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFDE00]`}
             >
               {lang}
             </button>
@@ -80,6 +83,7 @@ export default function Start() {
             href="https://www.youtube.com/watch?v=BJAdXnGAb7k"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="How to play (opens in a new tab)"
           >
             <HelpCircle size={18} />
             {ready ? t("start.howToPlay") : "..."}

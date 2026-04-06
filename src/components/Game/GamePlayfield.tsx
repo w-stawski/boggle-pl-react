@@ -74,15 +74,18 @@ export default function GamePlayfield({
       </div>
 
       {duplicateError && (
-        <div
+        <button
+          type="button"
           onClick={onDismissDuplicateError}
-          className="animate-shake absolute flex max-w-full items-center gap-3 border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#ef4444]"
+          role="alert"
+          aria-live="assertive"
+          className="animate-shake absolute flex max-w-full items-center gap-3 border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#ef4444] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           <Ban className="text-red-500" />
           <p className="text-l font-black text-red-500 uppercase">
             {duplicateError}
           </p>
-        </div>
+        </button>
       )}
     </div>
   );
