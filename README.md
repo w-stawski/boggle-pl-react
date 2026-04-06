@@ -1,7 +1,7 @@
 # Ploggle
 
-Personal demo project (open source). A Boggle-inspired word game built to practice and showcase proficiency in **React** and a modern frontend toolchain (with a future **Next.js** port planned).
-
+A Boggle-inspired word personal project built to practice and showcase proficiency in **React** and a modern frontend tooling.
+Live deployment: https://boggle-pl-react.vercel.app/
 > **Status:** Work in progress (not finished yet).
 
 ## Tech stack
