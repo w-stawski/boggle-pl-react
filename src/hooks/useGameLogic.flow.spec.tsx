@@ -73,6 +73,12 @@ describe("useGameLogic flow", () => {
     checkWordsMock.mockResolvedValue([{ val: "ABC", points: 5 }]);
 
     let exposed: GameLogicReturn | null = null;
+    const getExposed = (): GameLogicReturn => {
+      if (!exposed) {
+        throw new Error("GameLogicReturn not exposed yet");
+      }
+      return exposed;
+    };
     render(
       <MemoryRouter>
         <Harness onExpose={(game) => (exposed = game)} />
@@ -80,38 +86,37 @@ describe("useGameLogic flow", () => {
     );
 
     await waitFor(() => expect(exposed).not.toBeNull());
-    if (!exposed) throw new Error("GameLogicReturn not exposed");
 
     // Move into PLAYING by simulating a dice roll end.
     act(() => {
-      exposed.handleRollDice();
+      getExposed().handleRollDice();
     });
-    await waitFor(() => expect(exposed.phase).toBe("PLAYING"));
+    await waitFor(() => expect(getExposed().phase).toBe("PLAYING"));
 
     // Accept "ABC"
     act(() => {
-      exposed.handleSelectedLettersUpdate(letterA);
-      exposed.handleSelectedLettersUpdate(letterB);
-      exposed.handleSelectedLettersUpdate(letterC);
-      exposed.onWordAccept();
+      getExposed().handleSelectedLettersUpdate(letterA);
+      getExposed().handleSelectedLettersUpdate(letterB);
+      getExposed().handleSelectedLettersUpdate(letterC);
+      getExposed().onWordAccept();
     });
 
-    await waitFor(() => expect(exposed.words).toHaveLength(1));
-    expect(exposed.words[0]).toEqual({ val: "ABC", points: null });
+    await waitFor(() => expect(getExposed().words).toHaveLength(1));
+    expect(getExposed().words[0]).toEqual({ val: "ABC", points: null });
 
     // Simulate time expiry
     act(() => {
       triggerTimeUp?.();
     });
 
-    await waitFor(() => expect(exposed.phase).toBe("TURN_REVIEW"));
+    await waitFor(() => expect(getExposed().phase).toBe("TURN_REVIEW"));
 
     expect(checkWordsMock).toHaveBeenCalledTimes(1);
     expect(checkWordsMock).toHaveBeenCalledWith([{ val: "ABC", points: null }]);
 
-    expect(exposed.checkedWords).toEqual([{ val: "ABC", points: 5 }]);
-    expect(exposed.turnHistory).toHaveLength(1);
-    expect(exposed.turnHistory[0]).toEqual({
+    expect(getExposed().checkedWords).toEqual([{ val: "ABC", points: 5 }]);
+    expect(getExposed().turnHistory).toHaveLength(1);
+    expect(getExposed().turnHistory[0]).toEqual({
       player: 1,
       round: 1,
       score: 5,
@@ -123,6 +128,12 @@ describe("useGameLogic flow", () => {
     checkWordsMock.mockResolvedValue(undefined);
 
     let exposed: GameLogicReturn | null = null;
+    const getExposed = (): GameLogicReturn => {
+      if (!exposed) {
+        throw new Error("GameLogicReturn not exposed yet");
+      }
+      return exposed;
+    };
     render(
       <MemoryRouter>
         <Harness onExpose={(game) => (exposed = game)} />
@@ -130,34 +141,33 @@ describe("useGameLogic flow", () => {
     );
 
     await waitFor(() => expect(exposed).not.toBeNull());
-    if (!exposed) throw new Error("GameLogicReturn not exposed");
 
     act(() => {
-      exposed.handleRollDice();
+      getExposed().handleRollDice();
     });
-    await waitFor(() => expect(exposed.phase).toBe("PLAYING"));
+    await waitFor(() => expect(getExposed().phase).toBe("PLAYING"));
 
     act(() => {
-      exposed.handleSelectedLettersUpdate(letterA);
-      exposed.handleSelectedLettersUpdate(letterB);
-      exposed.handleSelectedLettersUpdate(letterC);
-      exposed.onWordAccept();
+      getExposed().handleSelectedLettersUpdate(letterA);
+      getExposed().handleSelectedLettersUpdate(letterB);
+      getExposed().handleSelectedLettersUpdate(letterC);
+      getExposed().onWordAccept();
     });
 
-    await waitFor(() => expect(exposed.words).toHaveLength(1));
+    await waitFor(() => expect(getExposed().words).toHaveLength(1));
 
     act(() => {
       triggerTimeUp?.();
     });
 
-    await waitFor(() => expect(exposed.phase).toBe("TURN_REVIEW"));
+    await waitFor(() => expect(getExposed().phase).toBe("TURN_REVIEW"));
 
     expect(checkWordsMock).toHaveBeenCalledWith([{ val: "ABC", points: null }]);
 
     // Fallback validated results map words -> points: 0
-    expect(exposed.checkedWords).toEqual([{ val: "ABC", points: 0 }]);
-    expect(exposed.turnHistory).toHaveLength(1);
-    expect(exposed.turnHistory[0].score).toBe(0);
+    expect(getExposed().checkedWords).toEqual([{ val: "ABC", points: 0 }]);
+    expect(getExposed().turnHistory).toHaveLength(1);
+    expect(getExposed().turnHistory[0].score).toBe(0);
   });
 });
 

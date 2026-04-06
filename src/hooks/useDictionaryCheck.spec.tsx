@@ -31,11 +31,11 @@ describe("useDictionaryCheck", () => {
     const checkWords = vi.fn();
 
     const pending: { resolve?: (resp: MockResponse) => void } = {};
-    global.fetch = vi.fn().mockImplementation(() => {
+    globalThis.fetch = vi.fn().mockImplementation(() => {
       return new Promise((resolve) => {
         pending.resolve = resolve;
       });
-    });
+    }) as unknown as typeof fetch;
 
     let api: DictApi | null = null;
     const onReady = (hook: DictApi) => {
@@ -45,13 +45,16 @@ describe("useDictionaryCheck", () => {
     render(<DictHarness onReady={onReady} />);
 
     await waitFor(() => expect(api).not.toBeNull());
-    if (!api) throw new Error("api not ready");
+    const getApi = (): DictApi => {
+      if (!api) throw new Error("api not ready");
+      return api;
+    };
 
     const words: Word[] = [{ val: "TEST", points: null }];
 
     act(() => {
-      checkWords.mockImplementation(() => api!.checkWords(words));
-      api!.checkWords(words);
+      checkWords.mockImplementation(() => getApi().checkWords(words));
+      getApi().checkWords(words);
     });
 
     await waitFor(() =>
@@ -68,14 +71,14 @@ describe("useDictionaryCheck", () => {
     await waitFor(() =>
       expect(screen.getByTestId("count").textContent).toBe("1"),
     );
-    expect(api.checkedWords[0]).toEqual({ val: "TEST", points: 3 });
+    expect(getApi().checkedWords[0]).toEqual({ val: "TEST", points: 3 });
   });
 
   it("only applies the latest request results (race safety)", async () => {
     let resolve1: ((resp: MockResponse) => void) | null = null;
     let resolve2: ((resp: MockResponse) => void) | null = null;
 
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
       .mockImplementationOnce(
         () =>
           new Promise((resolve) => {
@@ -99,14 +102,17 @@ describe("useDictionaryCheck", () => {
     );
 
     await waitFor(() => expect(api).not.toBeNull());
-    if (!api) throw new Error("api not ready");
+    const getApi = (): DictApi => {
+      if (!api) throw new Error("api not ready");
+      return api;
+    };
 
     const words1: Word[] = [{ val: "A", points: null }];
     const words2: Word[] = [{ val: "B", points: null }];
 
     act(() => {
-      api.checkWords(words1);
-      api.checkWords(words2);
+      getApi().checkWords(words1);
+      getApi().checkWords(words2);
     });
 
     // Resolve second request first
@@ -120,7 +126,7 @@ describe("useDictionaryCheck", () => {
     await waitFor(() =>
       expect(screen.getByTestId("count").textContent).toBe("1"),
     );
-    expect(api.checkedWords[0]).toEqual({ val: "B", points: 7 });
+    expect(getApi().checkedWords[0]).toEqual({ val: "B", points: 7 });
 
     // Resolve first request afterwards; should NOT override
     act(() => {
@@ -131,7 +137,7 @@ describe("useDictionaryCheck", () => {
     });
 
     await waitFor(() =>
-      expect(api.checkedWords[0]).toEqual({ val: "B", points: 7 }),
+      expect(getApi().checkedWords[0]).toEqual({ val: "B", points: 7 }),
     );
   });
 
@@ -140,11 +146,11 @@ describe("useDictionaryCheck", () => {
 
     let resolve1: ((resp: MockResponse) => void) | null = null;
 
-    global.fetch = vi.fn().mockImplementation(() => {
+    globalThis.fetch = vi.fn().mockImplementation(() => {
       return new Promise((resolve) => {
         resolve1 = resolve;
       });
-    });
+    }) as unknown as typeof fetch;
 
     let api: DictApi | null = null;
     const { unmount } = render(
@@ -156,12 +162,15 @@ describe("useDictionaryCheck", () => {
     );
 
     await waitFor(() => expect(api).not.toBeNull());
-    if (!api) throw new Error("api not ready");
+    const getApi = (): DictApi => {
+      if (!api) throw new Error("api not ready");
+      return api;
+    };
 
     const words: Word[] = [{ val: "TEST", points: null }];
 
     act(() => {
-      api.checkWords(words);
+      getApi().checkWords(words);
     });
 
     unmount();
