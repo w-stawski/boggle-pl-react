@@ -41,25 +41,10 @@ npm run test -- --run
 npm run lint
 ```
 
-## Deployment (Vercel)
-
-- **Import the repo** in Vercel.
-- **Build command:** `npm run build`
-- **Output directory:** `dist`
-- **Environment variables:** set `VITE_SJP_API_KEY` in Vercel (Preview + Production)
-- `vercel.json` contains an SPA rewrite (excluding `/api/*`).
-
-Notes:
-- `npm run preview` serves static files only (no serverless functions).
-- `VITE_*` vars are bundled into client JS — treat the key as **public**.
-
 ## Roadmap
-
+- Improve hot-seat mode
+- Add online multiplayer
+- Add leaderboard
 - More gameplay polish + edge cases
 - Better accessibility + keyboard UX
-- CI hardening
 - Next.js rewrite/experiment (App Router)
-
-## License
-
-Open source (add a `LICENSE` file if you want a specific license like MIT).
