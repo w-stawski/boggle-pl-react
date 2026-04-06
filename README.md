@@ -3,7 +3,7 @@ A Boggle-inspired word personal project built to practice and showcase proficien
 
 Live deployment: https://boggle-pl-react.vercel.app/
 
-> **Status:** Work in progress (not finished yet).
+> **Status:** Work in progress
 
 ## Tech stack
 
