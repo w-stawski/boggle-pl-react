@@ -1,22 +1,27 @@
 # Ploggle
 
-**Ploggle** is a Boggle-inspired word game specifically designed for the **Polish language**. I built this project to fill a gap in the market—since no Boggle clones exist for Polish speakers—while showcasing proficiency in **React** and modern frontend tooling.
+**Ploggle** is a Boggle-inspired word game specifically designed for the **Polish language**. I built this project to fill a gap in the market—since no high-quality Boggle clones exist for Polish speakers—while showcasing proficiency in **React** and modern frontend tooling.
 
 [**Play Live on Vercel**](https://boggle-pl-react.vercel.app/)
 
 > **Status:** 🚧 Work in Progress
 
+## The Ecosystem
+Because there was no existing public API to validate words against the official Polish SJP dictionary (essential for games like Scrabble or Boggle), I built and maintain the backend for this project:
+* **[sjp-check-api](https://github.com/w-stawski/sjp-check-api):** A dedicated API that checks Polish word validity and provides definitions.
+
 ## Key Features
-* **Polish Language Support:** Fully integrated with Polish characters and a dedicated SJP dictionary API.
+* **Polish Alphabet Support:** Fully integrated with native characters (ą, ć, ę, etc.).
+* **Custom API Integration:** Real-time word validation via the custom SJP-check-api.
 * **Responsive UI:** Built for both desktop and mobile play.
 * **Localization:** Multi-language support via `i18next`.
 
 ## Tech Stack
-* **Core:** React + TypeScript + Vite
+* **Frontend:** React + TypeScript + Vite
 * **Styling:** Tailwind CSS
-* **Routing:** React Router
+* **State/Routing:** React Router
 * **Testing:** Vitest + Testing Library
-* **Localization:** i18next / react-i18next
+* **Backend:** Node.js (via custom SJP API)
 
 ## Getting Started
 
@@ -25,7 +30,7 @@
     npm install
     ```
 2.  **Environment Setup:**
-    Create a `.env` file in the root and add your dictionary API key:
+    Create a `.env` file and add your dictionary API key:
     ```bash
     VITE_SJP_API_KEY=your_token_here
     ```
@@ -47,4 +52,3 @@
 - [ ] **Multiplayer:** Add real-time online rooms and "Hot-seat" mode improvements.
 - [ ] **Social:** Global leaderboards and user profiles.
 - [ ] **UX:** Enhanced keyboard navigation and ARIA accessibility.
-- [ ] **Polish:** Refined animations and edge-case handling for word verification.
