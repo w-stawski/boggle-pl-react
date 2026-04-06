@@ -19,11 +19,11 @@
 | Area | Choice |
 |------|--------|
 | UI | React 19, Tailwind CSS 4 |
-| Tooling | Vite 7, TypeScript 5.9 (strict + `strictNullChecks`) |
-| Routing | React Router 7 (`createBrowserRouter`, nested routes) |
-| i18n | i18next, `react-i18next`, HTTP backend + language detector |
-| Testing | Vitest 4, Testing Library, jsdom |
-| Analytics | Vercel Analytics (client) |
+| Tooling | Vite 7, TypeScript
+| Routing | React Router
+| i18n | i18next
+| Testing | Vitest, jsdom |
+| Analytics | Vercel Analytics |
 | Icons | Lucide React |
 
 ---
