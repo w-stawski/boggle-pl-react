@@ -8,6 +8,7 @@ import Game from "./components/Game/Game";
 import Setup from "./components/Setup/Setup";
 import Start from "./components/Start/Start";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { SettingsContextProvider } from "./contexts/SettingsContextProvider";
 import { GameMode } from "./utils/constants";
 
@@ -61,6 +62,7 @@ function App() {
     <>
       <RouterProvider router={router} />
       <Analytics />
+      <SpeedInsights />
     </>
   );
 }

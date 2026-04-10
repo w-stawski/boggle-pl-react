@@ -44,8 +44,14 @@ Because there was no existing public API to validate words against the official 
 | :--- | :--- |
 | `npm run dev` | Starts the Vite development server |
 | `npm run build` | Builds the production-ready bundle |
+| `npm run build:profile` | Builds a profiling-enabled production bundle (for React DevTools Profiler) |
 | `npm run test` | Runs the test suite via Vitest |
 | `npm run lint` | Checks for code quality and style issues |
+
+## Observability (Vercel)
+
+- Vercel **Analytics** and **Speed Insights** are integrated in the app (`src/App.tsx`).
+- Enable them in your Vercel project to see metrics in the dashboard.
 
 ## Roadmap
 - [ ] **Next.js Rewrite:** Transition to App Router for improved SEO and performance.

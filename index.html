@@ -16,6 +16,9 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Londrina+Shadow&display=swap"
       />
     </noscript>
+    <!-- Preload translation bundles to reduce i18n request chaining -->
+    <link rel="preload" as="fetch" href="/locales/en/common.json" crossorigin />
+    <link rel="preload" as="fetch" href="/locales/pl/common.json" crossorigin />
     <link href="index.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
