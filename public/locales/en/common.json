@@ -16,7 +16,15 @@
   },
   "game": {
     "rollDice": "Roll the Dice",
-    "duplicateError": "Word has already been used"
+    "duplicateError": "Word has already been used",
+    "timerWarning": "{{seconds}} seconds left",
+    "status": {
+      "readyToRoll": "Ready to roll the dice.",
+      "playing": "Turn in progress.",
+      "turnResults": "Turn results are shown.",
+      "roundComparison": "Round comparison is shown.",
+      "gameSummary": "Final game summary is shown."
+    }
   },
   "results": {
     "backToMenu": "Back to Menu",

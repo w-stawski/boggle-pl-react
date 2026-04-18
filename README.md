@@ -23,6 +23,13 @@ Because there was no existing public API to validate words against the official 
 * **Testing:** Vitest + Testing Library
 * **Backend:** Node.js (via custom SJP API)
 
+## Architecture (Quick)
+
+- `App` sets up router + providers.
+- `Layout` provides global shell + background + header.
+- `Game` uses `useGameLogic` for gameplay state (phased reducer flow).
+- Components in `src/components/Game/` keep UI split by responsibility (sidebar/playfield/results).
+
 ## Getting Started
 
 1.  **Install dependencies:**
@@ -52,6 +59,11 @@ Because there was no existing public API to validate words against the official 
 
 - Vercel **Analytics** and **Speed Insights** are integrated in the app (`src/App.tsx`).
 - Enable them in your Vercel project to see metrics in the dashboard.
+
+## Docs
+
+- Testing notes: `docs/TESTING.md`
+- Performance notes: `docs/PERFORMANCE.md`
 
 ## Roadmap
 - [ ] **Next.js Rewrite:** Transition to App Router for improved SEO and performance.

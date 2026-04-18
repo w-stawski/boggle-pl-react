@@ -20,6 +20,12 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col font-mono selection:bg-black selection:text-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:border-2 focus:border-black focus:bg-white focus:px-3 focus:py-2 focus:font-black focus:uppercase"
+      >
+        Skip to main content
+      </a>
       <div
         className="fixed inset-0 z-0 bg-[#FFDE00]"
         style={{ contain: "strict", contentVisibility: "auto" }}
@@ -55,7 +61,7 @@ export default function Layout() {
           </div>
         </div>
       </header>
-      <main className="relative z-10 flex grow flex-col">
+      <main id="main-content" className="relative z-10 flex grow flex-col">
         <Outlet />
       </main>
     </div>

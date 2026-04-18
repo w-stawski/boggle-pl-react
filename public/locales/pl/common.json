@@ -16,7 +16,15 @@
   },
   "game": {
     "rollDice": "Rzuć kostką",
-    "duplicateError": "Słowo już zostało użyte"
+    "duplicateError": "Słowo już zostało użyte",
+    "timerWarning": "Pozostało {{seconds}} sekund",
+    "status": {
+      "readyToRoll": "Gotowe do rzutu kostką.",
+      "playing": "Tura w toku.",
+      "turnResults": "Wyświetlane są wyniki tury.",
+      "roundComparison": "Wyświetlane jest porównanie rundy.",
+      "gameSummary": "Wyświetlane jest końcowe podsumowanie gry."
+    }
   },
   "results": {
     "backToMenu": "Powrót do menu",
