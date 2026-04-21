@@ -53,8 +53,8 @@ describe("useDictionaryCheck", () => {
     const words: Word[] = [{ val: "TEST", points: null }];
 
     act(() => {
-      checkWords.mockImplementation(() => getApi().checkWords(words));
-      getApi().checkWords(words);
+      checkWords.mockImplementation(() => getApi().checkWords(words, "pl"));
+      getApi().checkWords(words, "pl");
     });
 
     await waitFor(() =>
@@ -111,8 +111,8 @@ describe("useDictionaryCheck", () => {
     const words2: Word[] = [{ val: "B", points: null }];
 
     act(() => {
-      getApi().checkWords(words1);
-      getApi().checkWords(words2);
+      getApi().checkWords(words1, "pl");
+      getApi().checkWords(words2, "pl");
     });
 
     // Resolve second request first
@@ -170,7 +170,7 @@ describe("useDictionaryCheck", () => {
     const words: Word[] = [{ val: "TEST", points: null }];
 
     act(() => {
-      getApi().checkWords(words);
+      getApi().checkWords(words, "pl");
     });
 
     unmount();
@@ -189,6 +189,57 @@ describe("useDictionaryCheck", () => {
 
     // If unmounted state updates happened, React would warn via console.error.
     expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it("checks english words via public api and maps to boggle points", async () => {
+    globalThis.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [{ word: "apple" }],
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({}),
+      }) as unknown as typeof fetch;
+
+    let api: DictApi | null = null;
+    render(
+      <DictHarness
+        onReady={(hook) => {
+          api = hook;
+        }}
+      />,
+    );
+
+    await waitFor(() => expect(api).not.toBeNull());
+    const getApi = (): DictApi => {
+      if (!api) throw new Error("api not ready");
+      return api;
+    };
+
+    await act(async () => {
+      await getApi().checkWords(
+        [
+          { val: "APPLE", points: null },
+          { val: "QWERTY", points: null },
+        ],
+        "en",
+      );
+    });
+
+    expect(globalThis.fetch).toHaveBeenNthCalledWith(
+      1,
+      "https://api.dictionaryapi.dev/api/v2/entries/en/apple",
+    );
+    expect(globalThis.fetch).toHaveBeenNthCalledWith(
+      2,
+      "https://api.dictionaryapi.dev/api/v2/entries/en/qwerty",
+    );
+    expect(getApi().checkedWords).toEqual([
+      { val: "APPLE", points: 2 },
+      { val: "QWERTY", points: 0 },
+    ]);
   });
 });
 

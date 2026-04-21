@@ -1,11 +1,11 @@
-import { diceLetters } from "./constants";
+import { diceLettersByLanguage, polishDiceLetters } from "./constants";
 import type { Letter } from "./types";
 
 /**
  * Generates initial random values for the dice board.
  * Randomizes both which dice is in which slot and which face of the dice is up.
  */
-export const getDiceRandomValues = (): Letter[] => {
+export const getDiceRandomValues = (language: string = "pl"): Letter[] => {
   /**
    * Fisher-Yates shuffle algorithm for uniform randomness.
    * Standard `sort(() => Math.random() - 0.5)` is biased and not recommended for games.
@@ -19,7 +19,8 @@ export const getDiceRandomValues = (): Letter[] => {
     return newArray;
   };
 
-  const randomOrderDiceArr = shuffle(diceLetters);
+  const diceForLanguage = diceLettersByLanguage[language] ?? polishDiceLetters;
+  const randomOrderDiceArr = shuffle(diceForLanguage);
 
   return randomOrderDiceArr.map((item: Letter[], index) => {
     // Pick one of the 6 faces of the current dice.

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { getDiceRandomValues } from "../utils/helpers";
 import type { Letter } from "../utils/types";
 
@@ -8,8 +8,13 @@ type useDiceType = { diceValues: Letter[]; rollDice: (repeat: number) => void };
  * Custom hook to manage the dice rolling animation and logic.
  * Handles recursive timeouts and ensures no state updates occur after unmount.
  */
-export const useDice = (onDiceRollEndFn: () => void): useDiceType => {
-  const [diceValues, setDiceValues] = useState<Letter[]>(getDiceRandomValues());
+export const useDice = (
+  onDiceRollEndFn: () => void,
+  language: string,
+): useDiceType => {
+  const [diceValues, setDiceValues] = useState<Letter[]>(
+    getDiceRandomValues(language),
+  );
   // Tracks if the component is still mounted to prevent memory leaks and React warnings.
   const isMounted = useRef(false);
   const onDiceRollEndFnRef = useRef(onDiceRollEndFn);
@@ -18,6 +23,10 @@ export const useDice = (onDiceRollEndFn: () => void): useDiceType => {
   useEffect(() => {
     onDiceRollEndFnRef.current = onDiceRollEndFn;
   }, [onDiceRollEndFn]);
+
+  useEffect(() => {
+    setDiceValues(getDiceRandomValues(language));
+  }, [language]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -30,28 +39,31 @@ export const useDice = (onDiceRollEndFn: () => void): useDiceType => {
    * Triggers a recursive dice roll animation.
    * @param repeat - Number of times to "shuffle" before settling on values.
    */
-  const rollDice = function roll(repeat: number): void {
-    // Prevent state updates if the user navigated away.
-    if (!isMounted.current) return;
+  const rollDice = useCallback(
+    function roll(repeat: number): void {
+      // Prevent state updates if the user navigated away.
+      if (!isMounted.current) return;
 
-    setDiceValues(getDiceRandomValues());
+      setDiceValues(getDiceRandomValues(language));
 
-    // Recursive timeout for the "rolling" effect.
-    if (repeat > 0) {
-      setTimeout(() => roll(repeat - 1), 50);
-      return;
-    }
+      // Recursive timeout for the "rolling" effect.
+      if (repeat > 0) {
+        setTimeout(() => roll(repeat - 1), 50);
+        return;
+      }
 
-    // Callback when the animation finishes.
-    onDiceRollEndFnRef.current();
-  };
+      // Callback when the animation finishes.
+      onDiceRollEndFnRef.current();
+    },
+    [language],
+  );
 
   const result = useMemo(
     () => ({
       diceValues,
       rollDice,
     }),
-    [diceValues],
+    [diceValues, rollDice],
   );
 
   return result;

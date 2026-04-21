@@ -1,6 +1,6 @@
 import type { Letter } from "./types";
 
-export const diceLetters: Letter[][] = [
+export const polishDiceLetters: Letter[][] = [
   [
     { val: "A", id: "d0-s0", position: null },
     { val: "A", id: "d0-s1", position: null },
@@ -130,6 +130,37 @@ export const diceLetters: Letter[][] = [
     { val: "W", id: "d15-s5", position: null },
   ],
 ] as const;
+
+// Classic 4x4 Boggle (New version) dice distribution.
+export const englishDiceLetters: Letter[][] = [
+  ["A", "A", "E", "E", "G", "N"],
+  ["A", "B", "B", "J", "O", "O"],
+  ["A", "C", "H", "O", "P", "S"],
+  ["A", "F", "F", "K", "P", "S"],
+  ["A", "O", "O", "T", "T", "W"],
+  ["C", "I", "M", "O", "T", "U"],
+  ["D", "E", "I", "L", "R", "X"],
+  ["D", "E", "L", "R", "V", "Y"],
+  ["D", "I", "S", "T", "T", "Y"],
+  ["E", "E", "G", "H", "N", "W"],
+  ["E", "E", "I", "N", "S", "U"],
+  ["E", "H", "R", "T", "V", "W"],
+  ["E", "I", "O", "S", "S", "T"],
+  ["E", "L", "R", "T", "T", "Y"],
+  ["H", "I", "M", "N", "Qu", "U"],
+  ["H", "L", "N", "N", "R", "Z"],
+].map((die, dieIndex) =>
+  die.map((val, sideIndex) => ({
+    val,
+    id: `en-d${dieIndex}-s${sideIndex}`,
+    position: null,
+  })),
+);
+
+export const diceLettersByLanguage: Record<string, Letter[][]> = {
+  pl: polishDiceLetters,
+  en: englishDiceLetters,
+};
 
 export const GameMode = {
   single: "singlePlayer",

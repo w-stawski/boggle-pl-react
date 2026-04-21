@@ -196,7 +196,8 @@ export function useGameLogic({
 }: UseGameLogicParams) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const gameLanguage = i18n.resolvedLanguage === "en" ? "en" : "pl";
 
   // Sync round with context
   useEffect(() => {
@@ -216,7 +217,7 @@ export function useGameLogic({
     startTimer(timeLimit);
   }, [startTimer, timeLimit]);
 
-  const { diceValues, rollDice } = useDice(handleDiceRollEnd);
+  const { diceValues, rollDice } = useDice(handleDiceRollEnd, gameLanguage);
 
   // Trigger check when phase changes to CHECKING
   const wordsRef = useRef(state.words);
@@ -227,7 +228,7 @@ export function useGameLogic({
   useEffect(() => {
     if (state.phase === "CHECKING") {
       const runCheck = async () => {
-        const results = await checkWords(wordsRef.current);
+        const results = await checkWords(wordsRef.current, gameLanguage);
         const validatedResults =
           results || wordsRef.current.map((w) => ({ ...w, points: 0 }));
         const turnScore = validatedResults.reduce(
@@ -242,7 +243,7 @@ export function useGameLogic({
       };
       runCheck();
     }
-  }, [state.phase, checkWords]);
+  }, [state.phase, checkWords, gameLanguage]);
 
   const handleRollDice = useCallback(() => {
     dispatch({ type: "START_ROLLING" });

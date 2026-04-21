@@ -36,7 +36,10 @@ vi.mock("./useDictionaryCheck", () => ({
 }));
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { resolvedLanguage: "pl" },
+  }),
 }));
 
 function Harness({
@@ -112,7 +115,10 @@ describe("useGameLogic flow", () => {
     await waitFor(() => expect(getExposed().phase).toBe("TURN_REVIEW"));
 
     expect(checkWordsMock).toHaveBeenCalledTimes(1);
-    expect(checkWordsMock).toHaveBeenCalledWith([{ val: "ABC", points: null }]);
+    expect(checkWordsMock).toHaveBeenCalledWith(
+      [{ val: "ABC", points: null }],
+      "pl",
+    );
 
     expect(getExposed().checkedWords).toEqual([{ val: "ABC", points: 5 }]);
     expect(getExposed().turnHistory).toHaveLength(1);
@@ -162,7 +168,10 @@ describe("useGameLogic flow", () => {
 
     await waitFor(() => expect(getExposed().phase).toBe("TURN_REVIEW"));
 
-    expect(checkWordsMock).toHaveBeenCalledWith([{ val: "ABC", points: null }]);
+    expect(checkWordsMock).toHaveBeenCalledWith(
+      [{ val: "ABC", points: null }],
+      "pl",
+    );
 
     // Fallback validated results map words -> points: 0
     expect(getExposed().checkedWords).toEqual([{ val: "ABC", points: 0 }]);
