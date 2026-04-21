@@ -10,7 +10,7 @@ function DiceHarness({
   onReady: (rollDice: (repeat: number) => void) => void;
   onEnd: () => void;
 }) {
-  const { rollDice } = useDice(onEnd);
+  const { rollDice } = useDice(onEnd, "pl");
 
   useEffect(() => {
     onReady(rollDice);
@@ -84,4 +84,3 @@ describe("useDice", () => {
     vi.useRealTimers();
   });
 });
-
