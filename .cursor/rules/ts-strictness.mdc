@@ -1,0 +1,28 @@
+---
+description: Keep TypeScript strict in hooks and game logic
+globs:
+  - src/hooks/**/*.{ts,tsx}
+  - "!src/hooks/**/*.spec.{ts,tsx}"
+  - "!src/hooks/**/*.test.{ts,tsx}"
+alwaysApply: true
+---
+
+# TypeScript strictness
+
+- Avoid `any` in hook and logic code.
+- Prefer explicit return types for exported hooks.
+- Use `unknown` for untrusted values, then narrow safely.
+- Model nullable or optional states explicitly instead of broad casts.
+- Avoid `as any` and double assertions unless there is no safe alternative.
+- If an escape hatch is unavoidable, add a short TODO comment with intent.
+
+```tsx
+// ❌ BAD
+const value: any = input;
+
+// ✅ GOOD
+const value: unknown = input;
+if (typeof value === 'string') {
+  // narrowed safely
+}
+```

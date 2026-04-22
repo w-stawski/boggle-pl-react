@@ -1,0 +1,24 @@
+---
+description: Use TypeScript for all new and edited component code
+globs: src/components/**/*.tsx
+alwaysApply: false
+---
+
+# TypeScript for components
+
+- Write new source files as `.ts` or `.tsx`, not `.js` or `.jsx`.
+- When editing component JavaScript, migrate to TypeScript in the same change when practical.
+- Prefer explicit props and return types for exported components/hooks.
+- Do not use `any`; use precise types or `unknown` plus narrowing.
+- If a temporary `any` is unavoidable, add a one-line TODO with follow-up intent.
+- Keep runtime behavior unchanged during type-only refactors unless explicitly requested.
+
+```tsx
+// ❌ BAD
+type Props = any;
+
+// ✅ GOOD
+type Props = {
+  title: string;
+};
+```

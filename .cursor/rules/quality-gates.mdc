@@ -1,0 +1,24 @@
+---
+description: Enforce test coverage and code quality gates for TS and TSX changes
+globs:
+  - src/**/*.{ts,tsx}
+  - "!src/**/*.spec.{ts,tsx}"
+  - "!src/**/*.test.{ts,tsx}"
+alwaysApply: true
+---
+
+# Quality gates
+
+- Treat lint and formatting issues as blocking; do not finish with new lint or format errors.
+- Keep imports clean by removing unused imports and organizing imports.
+- For behavior changes in hooks, utils, or game logic, add or update tests in the same change.
+- Prefer focused tests that cover behavior and edge cases.
+- Do not weaken tests to pass CI; fix the root cause.
+- If unrelated existing failures block progress, call them out clearly.
+
+```ts
+// Expected workflow for behavior change:
+// 1) implement change
+// 2) update or add tests
+// 3) ensure lint and format pass
+```
