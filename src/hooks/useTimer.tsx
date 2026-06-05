@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Custom hook to manage a countdown timer.
@@ -27,7 +27,7 @@ export const useTimer = (onTimeUp: () => void) => {
 
   useEffect(() => {
     // Only start the interval if the timer is explicitly running and has time remaining.
-    if (!isTimerRunning || seconds <= 0) {
+    if (!isTimerRunning) {
       return;
     }
 
