@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { SettingsContext } from "./SettingsContext";
-
+// todo
 export function SettingsContextProvider({ children }: { children: ReactNode }) {
   const [numberOfPlayers, setNumberOfPlayers] = useState<number>(1);
   const [timeLimit, setTimeLimit] = useState<number>(90);
